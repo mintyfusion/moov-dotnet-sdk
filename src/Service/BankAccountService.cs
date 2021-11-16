@@ -1,7 +1,6 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
     #region namespace
-    using Helper;
     using Interface;
     using Model.Bank;
     using System;
@@ -14,11 +13,11 @@
     public class BankAccountService : IBankAccount
     {
         #region Fields
-        private readonly MoovClient moovClient = null;
+        private readonly IClient moovClient = null;
         #endregion Fields
 
         #region Constructor
-        public BankAccountService(MoovClient moovClient)
+        public BankAccountService(IClient moovClient)
         {
             this.moovClient = moovClient;
         }
@@ -37,11 +36,13 @@
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
+            string scope = string.Format(Scope.BankAccountsRead.Value(),
                 accountId);
 
-            IList<BankAccountModel> bankAccountList = await moovClient.GetAsync<IList<BankAccountModel>>(string.Format(Endpoint.AddBankAccount.Value(),
-                new List<string>() { scope }, accountId));
+            string endpoint = string.Format(Endpoint.ListBankAccounts.Value(), accountId);
+
+            IList<BankAccountModel> bankAccountList = await moovClient.GetAsync<IList<BankAccountModel>>(endpoint,
+                new List<string>() { scope });
 
             return bankAccountList;
         }

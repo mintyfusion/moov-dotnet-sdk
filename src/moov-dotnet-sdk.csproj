@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>moov_dotnet_sdk</RootNamespace>
+    <RootNamespace>Tutkoo.mintyfusion.Moov.Sdk</RootNamespace>
+    <AssemblyName>Tutkoo.mintyfusion.Moov.Sdk</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

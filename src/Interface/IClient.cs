@@ -6,7 +6,7 @@
     #endregion namespace
 
     #region Interface
-    interface IClient
+    public interface IClient
     {
         #region Methods
         Task<T> GetAsync<T>(string endpoint,

@@ -43,18 +43,15 @@
         /// <param name="endpoint">Endpoint of the request.</param>
         /// <param name="refreshToken">Optional</param>
         /// <returns>T</returns>
-        /// <exception cref="ArgumentNullException">Throws ArgumentNullException when both scopeList or refreshToken are NULL or empty.</exception>
+        /// <exception cref="InvalidOperationException">Throws ArgumentNullException when both scopeList or refreshToken are NULL or empty.</exception>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
         public async Task<T> GetAsync<T>(string endpoint,
             IList<string> scopeList = null,
             string refreshToken = "")
         {
-            string token = await GetTokenAsync(scopeList,
+            await GetTokenAsync(scopeList,
                 refreshToken);
-
-            httpClient.DefaultRequestHeaders.Add("Authorization",
-                string.Format("bearer {0}", token));
 
             HttpResponseMessage response = await httpClient.GetAsync(endpoint);
 
@@ -78,14 +75,15 @@
         /// </summary>
         /// <param name="scopeList">List of scopes to retrieve the token before making actual request.</param>
         /// <param name="refreshToken">Optional</param>
+        /// <param name="addTokenToAuthHeader">Adds token as Authorization Header for outgoing HttpRequest</param>
         /// <returns>T</returns>
-        /// <exception cref="ArgumentNullException">Throws ArgumentNullException when both scopeList or refreshToken are NULL or empty.</exception>
+        /// <exception cref="InvalidOperationException">Throws ArgumentNullException when both scopeList or refreshToken are NULL or empty.</exception>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         private async Task<string> GetTokenAsync(IList<string> scopeList = null,
-            string refreshToken = "")
+            string refreshToken = "", bool addTokenToAuthHeader = true)
         {
             if (scopeList == null && string.IsNullOrEmpty(refreshToken))
-                throw new ArgumentNullException("MoovClient:GetTokenAsync - Both scopeList and refreshToken cannot be null or empty.");
+                throw new InvalidOperationException("MoovClient:GetTokenAsync - Both scopeList and refreshToken cannot be null or empty.");
 
             string scope = string.Join(" ", scopeList);
 
@@ -93,19 +91,27 @@
             {
                 ClientId = clientId,
                 ClientSecret = clientSecret,
-                GrantType = string.IsNullOrEmpty(refreshToken) ? GrantType.ClientCredentials.Value() : GrantType.RefreshToken.Value(),
+                GrantType = scopeList != null ? GrantType.ClientCredentials.Value() : GrantType.RefreshToken.Value(),
                 Scope = scope,
                 RefreshToken = refreshToken
             };
 
+            string jsonString = JsonSerializer.Serialize(requestTokenModel, new JsonSerializerOptions
+            {
+                IgnoreNullValues = true,
+            });
+
             HttpResponseMessage response = await httpClient.PostAsync(Endpoint.GetAccessToken.Value(),
-                new StringContent(JsonSerializer.Serialize(requestTokenModel)));
+                new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
                 string responseContent = await response.Content.ReadAsStringAsync();
 
                 TokenResponseModel tokenResponse = JsonSerializer.Deserialize<TokenResponseModel>(responseContent);
+
+                if (addTokenToAuthHeader)
+                    httpClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", tokenResponse.AccessToken));
 
                 return tokenResponse.AccessToken;
             }

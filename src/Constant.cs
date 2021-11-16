@@ -8,7 +8,7 @@
 
         public const string MOOV_CLIENT_ID = "Moov:ClientId";
 
-        public const string MOOV_SECRET = "Moov:Secret";
+        public const string MOOV_SECRET = "Moov:ClientSecret";
         #endregion Fields
     }
     #endregion Class
