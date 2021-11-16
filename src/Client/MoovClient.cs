@@ -1,16 +1,18 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Helper
 {
     #region namespace
+    using Exception;
     using Interface;
     using Microsoft.Extensions.Configuration;
     using Model.Token;
+    using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
+    using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    using Exception;
-    using System;
     #endregion namespace
 
     #region Class
@@ -54,6 +56,100 @@
                 refreshToken);
 
             HttpResponseMessage response = await httpClient.GetAsync(endpoint);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(responseContent))
+                    return default;
+
+                return JsonSerializer.Deserialize<T>(responseContent);
+            }
+
+            throw new MoovSdkException(response.ReasonPhrase);
+        }
+
+        public async Task<T> PostAsync<T>(string endpoint,
+            IList<string> scopeList = null,
+            object postData = null,
+            string refreshToken = "")
+        {
+            await GetTokenAsync(scopeList,
+                refreshToken);
+
+            StringContent stringContent = null;
+
+            if (postData != null)
+            {
+                string json = JsonSerializer.Serialize(postData, new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                });
+
+                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            HttpResponseMessage response = await httpClient.PostAsync(endpoint,
+                stringContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(responseContent))
+                    return default;
+
+                return JsonSerializer.Deserialize<T>(responseContent);
+            }
+
+            throw new MoovSdkException(response.ReasonPhrase);
+        }
+
+        public async Task<T> PutAsync<T>(string endpoint,
+            IList<string> scopeList = null,
+            object postData = null,
+            string refreshToken = "")
+        {
+            await GetTokenAsync(scopeList,
+                refreshToken);
+
+            StringContent stringContent = null;
+
+            if (postData != null)
+            {
+                string json = JsonSerializer.Serialize(postData, new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                });
+
+                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            HttpResponseMessage response = await httpClient.PutAsync(endpoint,
+                stringContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(responseContent))
+                    return default;
+
+                return JsonSerializer.Deserialize<T>(responseContent);
+            }
+
+            throw new MoovSdkException(response.ReasonPhrase);
+        }
+
+        public async Task<T> DeleteAsync<T>(string endpoint,
+            IList<string> scopeList = null,
+            string refreshToken = "")
+        {
+            await GetTokenAsync(scopeList,
+                refreshToken);
+
+            HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
 
             if (response.IsSuccessStatusCode)
             {
