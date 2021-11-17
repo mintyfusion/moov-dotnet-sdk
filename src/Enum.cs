@@ -18,160 +18,217 @@
         RefreshToken
     }
 
-    public enum Scope
+    public enum AccountScope
     {
         [StrProp("accounts.write")]
-        AccountsWrite,
-
-        [StrProp("/accounts/{0}/bank-accounts.read")]
-        BankAccountsRead,
-
-        [StrProp("/accounts/{0}/bank-accounts.write")]
-        BankAccountsWrite,
-
-        [StrProp("/accounts/{0}/capabilities.read")]
-        CapabilitiesRead,
-
-        [StrProp("/accounts/{0}/capabilities.write")]
-        CapabilitiesWrite,
-
-        [StrProp("/accounts/{0}/documents.read")]
-        DocumentsRead,
-
-        [StrProp("/accounts/{0}/documents.write")]
-        DocumentsWrite,
-
-        [StrProp("/accounts/{0}/payment-methods.read")]
-        PaymentMethods,
-
-        [StrProp("/accounts/{0}/profile-enrichment.read")]
-        ProfileImage,
-
-        [StrProp("/accounts/{0}/profile.read")]
-        ProfileRead,
-
-        [StrProp("/accounts/{0}/profile.write")]
-        ProfileWrite,
-
-        [StrProp("/accounts/{0}/representatives.read")]
-        RepresentativesRead,
-
-        [StrProp("/accounts/{0}/representatives.write")]
-        RepresentativesWrite,
-
-        [StrProp("/accounts/{0}/transfers.write")]
-        TransfersWrite,
-
-        [StrProp("/accounts/{0}/transfers.read")]
-        TransfersRead,
-
-        [StrProp("/accounts/{0}/wallets.read")]
-        WalletsRead,
-
-        [StrProp("fed.read")]
-        FedRead,
-
-        [StrProp("ping.read")]
-        Ping
+        Write
     }
 
-    public enum Endpoint
+    public enum BankAccountScope
+    {
+        [StrProp("/accounts/{0}/bank-accounts.read")]
+        Read,
+
+        [StrProp("/accounts/{0}/bank-accounts.write")]
+        Write
+    }
+
+    public enum CapabilitiesScope
+    {
+        [StrProp("/accounts/{0}/capabilities.read")]
+        Read,
+
+        [StrProp("/accounts/{0}/capabilities.write")]
+        Write
+    }
+
+    public enum DocumentScope
+    {
+        [StrProp("/accounts/{0}/documents.read")]
+        Read,
+
+        [StrProp("/accounts/{0}/documents.write")]
+        Write
+    }
+
+    public enum PaymentMethodScope
+    {
+        [StrProp("/accounts/{0}/payment-methods.read")]
+        Read
+    }
+
+    public enum ProfileScope
+    {
+        [StrProp("/accounts/{0}/profile-enrichment.read")]
+        ProfileImageRead,
+
+        [StrProp("/accounts/{0}/profile.read")]
+        Read,
+
+        [StrProp("/accounts/{0}/profile.write")]
+        Write
+    }
+
+    public enum RepresentativeScope
+    {
+        [StrProp("/accounts/{0}/representatives.read")]
+        Read,
+
+        [StrProp("/accounts/{0}/representatives.write")]
+        Write
+    }
+
+    public enum TransferScope
+    {
+        [StrProp("/accounts/{0}/transfers.read")]
+        Read,
+
+        [StrProp("/accounts/{0}/transfers.write")]
+        Write
+    }
+
+    public enum WalletScope
+    {
+        [StrProp("/accounts/{0}/wallets.read")]
+        Read
+    }
+
+    public enum FedScope
+    {
+        [StrProp("fed.read")]
+        Read
+    }
+
+    public enum PingScope
+    {
+        [StrProp("ping.read")]
+        Read
+    }
+
+    public enum TokenEndpoint
     {
         [StrProp("/oauth2/token")]
-        GetAccessToken,
+        Get,
 
         [StrProp("/oauth2/revoke")]
-        RevokeToken,
+        Revoke
+    }
+
+    public enum AccountEndpoint
+    {
+        [StrProp("/accounts")]
+        Get,
 
         [StrProp("/accounts")]
-        GetAccounts,
-
-        [StrProp("/accounts")]
-        CreateAccount,
+        Create,
 
         [StrProp("/accounts/{0}")]
-        GetAccountById,
+        GetById,
 
         [StrProp("/accounts/{0}")]
-        UpdateAccount,
+        Update,
 
         [StrProp("/accounts/{0}")]
-        PatchAccount,
+        Patch
+    }
 
+    public enum TermsOfServiceEndpoint
+    {
         [StrProp("/tos-token")]
-        GetTermsOfServiceToken,
+        GetToken
+    }
 
+    public enum CapabilityEndpoint
+    {
         [StrProp("/accounts/{0}/capabilities/{1}")]
-        GetRequestedCapabilityForAccountById,
+        GetRequested,
 
         [StrProp("/{0}/capabilities/{1}")]
-        DisableCapability,
+        Disable,
 
         [StrProp("/accounts/{0}/capabilities")]
-        GetCapability,
+        Get,
 
         [StrProp("/accounts/{0}/capabilities")]
-        RequestCapability,
+        Request
+    }
+
+    public enum BankAccountEndpoint
+    {
+        [StrProp("/accounts/{0}/bank-accounts")]
+        Create,
 
         [StrProp("/accounts/{0}/bank-accounts")]
-        AddBankAccount,
-
-        [StrProp("/accounts/{0}/bank-accounts")]
-        ListBankAccounts,
+        List,
 
         [StrProp("/accounts/{0}/bank-accounts/{1}")]
-        GetBankAccount,
+        Get,
 
         [StrProp("/accounts/{0}/bank-accounts/{1}")]
-        DisableBankAccount,
+        Disable,
 
         [StrProp("/accounts/{0}/bank-accounts/{1}/micro-deposits")]
-        InitiateMicroDeposite,
+        InitiateMicroDepositeVerification,
 
         [StrProp("/accounts/{0}/bank-accounts/{1}/micro-deposits")]
-        CompleteMicroDeposite,
+        CompleteMicroDepositeVerification
+    }
 
+    public enum PaymentMethodEndpoint
+    {
         [StrProp("/accounts/{0}/payment-methods")]
-        PaymentMethods,
+        List,
 
         [StrProp("/accounts/{0}/payment-methods/{1}")]
-        GetPaymentMethod,
+        Get
+    }
+
+    public enum TransferEndpoint
+    {
+        [StrProp("/transfers")]
+        Create,
 
         [StrProp("/transfers")]
-        CreateTransfer,
-
-        [StrProp("/transfers")]
-        ListTransfers,
+        List,
 
         [StrProp("/transfers/{0}")]
-        GetTransfer,
+        Get,
 
         [StrProp("/transfer-options")]
-        GetTransferOptions,
+        GetTransferOptions
+    }
 
-        [StrProp("/accounts/{accountID}/representatives")]
-        CreateRepresentative,
+    public enum RepresentativeEndpoint
+    {
+        [StrProp("/accounts/{0}/representatives")]
+        Create,
 
-        [StrProp("/accounts/{accountID}/representatives")]
-        ListRepresentative,
+        [StrProp("/accounts/{0}/representatives")]
+        List,
 
-        [StrProp("/accounts/{accountID}/representatives/{representativeID}")]
-        GetRepresentative,
+        [StrProp("/accounts/{0}/representatives/{1}")]
+        Get,
 
-        [StrProp("/accounts/{accountID}/representatives/{representativeID}")]
-        DisableRepresentative,
+        [StrProp("/accounts/{0}/representatives/{1}")]
+        Disable,
 
-        [StrProp("/accounts/{accountID}/representatives")]
-        UpdateRepresentative,
+        [StrProp("/accounts/{0}/representatives")]
+        Update
+    }
 
-        [StrProp("/accounts/{accountID}/wallets")]
-        ListWallets,
+    public enum WalletEndpoint
+    {
+        [StrProp("/accounts/{0}/wallets")]
+        List,
 
-        [StrProp("/accounts/{accountID}/wallets/{walletID}")]
-        GetWalletById,
+        [StrProp("/accounts/{0}/wallets/{1}")]
+        Get
+    }
 
+    public enum InstitutionEndpoint
+    {
         [StrProp("/institutions/{rail}/search")]
-        SearchInstitution
+        Search
     }
     #endregion Enum
 }

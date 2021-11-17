@@ -21,16 +21,14 @@
         Task<BankAccountModel> AddAsync(string accountId,
             BankAccountModel bankAccount);
 
-        Task<BankAccountModel> AddPlaidWithTokenAsync(string accountId,
-            string plaidToken);
+        Task<BankAccountModel> AddPlaidAsync(string accountId,
+            string token,
+            bool isPublicToken);
 
-        Task<BankAccountModel> AddPlaidWithLinkAsync(string accountId,
-            string publicToken);
-
-        Task<bool> InitiateMicroDepositsAsync(string accountId,
+        Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
            string bankAccountId);
 
-        Task<bool> CompleteMicroDepositsAsync(string accountId,
+        Task<bool> CompleteMicroDepositVerificationAsync(string accountId,
            string bankAccountId);
         #endregion Methods
     }

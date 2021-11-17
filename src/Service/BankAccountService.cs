@@ -36,10 +36,10 @@
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            string scope = string.Format(Scope.BankAccountsRead.Value(),
+            string scope = string.Format(BankAccountScope.Read.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.ListBankAccounts.Value(), accountId);
+            string endpoint = string.Format(BankAccountEndpoint.List.Value(), accountId);
 
             IList<BankAccountModel> bankAccountList = await moovClient.GetAsync<IList<BankAccountModel>>(endpoint,
                 new List<string>() { scope });
@@ -64,10 +64,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(Scope.BankAccountsRead.Value(),
+            string scope = string.Format(BankAccountScope.Read.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.GetBankAccount.Value(), accountId, bankAccountId);
+            string endpoint = string.Format(BankAccountEndpoint.Get.Value(), accountId, bankAccountId);
 
             BankAccountModel bankAccount = await moovClient.GetAsync<BankAccountModel>(endpoint,
                 new List<string>() { scope });
@@ -92,10 +92,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
+            string scope = string.Format(BankAccountScope.Write.Value(),
                accountId);
 
-            string endpoint = string.Format(Endpoint.DisableBankAccount.Value(), accountId, bankAccountId);
+            string endpoint = string.Format(BankAccountEndpoint.Disable.Value(), accountId, bankAccountId);
 
             bool success = await moovClient.DeleteAsync<bool>(endpoint,
                 new List<string>() { scope });
@@ -118,10 +118,10 @@
             if (bankAccount == null)
                 throw new ArgumentNullException(nameof(bankAccount));
 
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
+            string scope = string.Format(BankAccountScope.Write.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.AddBankAccount.Value(), accountId);
+            string endpoint = string.Format(BankAccountEndpoint.Create.Value(), accountId);
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
                 new List<string>() { scope },
@@ -134,63 +134,49 @@
         /// Add bank account with plaid token details
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="plaidToken"></param>
-        /// <returns>Bank account with id</returns>
-        public async Task<BankAccountModel> AddPlaidWithTokenAsync(string accountId,
-            string plaidToken)
+        /// <param name="token"></param>
+        /// <param name="isPublicToken">True if add plaid with link, false if add plaid with token</param>
+        /// <returns>Bankaccount</returns>
+        public async Task<BankAccountModel> AddPlaidAsync(string accountId,
+            string token,
+            bool isPublicToken)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (string.IsNullOrEmpty(plaidToken))
-                throw new ArgumentNullException(nameof(plaidToken));
+            if (string.IsNullOrEmpty(token))
+                throw new ArgumentNullException(nameof(token));
 
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
+            string scope = string.Format(BankAccountScope.Write.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.AddBankAccount.Value(), accountId);
+            string endpoint = string.Format(BankAccountEndpoint.Create.Value(), accountId);
+
+            IDictionary<string, object> postData = null;
+
+            if (isPublicToken)
+            {
+                postData = new Dictionary<string, object>()
+                {
+                    { "plaidLink", new Dictionary<string, string>() { { "publicToken", token} } }
+                };
+            }
+            else
+            {
+                postData = new Dictionary<string, object>()
+                {
+                    { "plaid", new Dictionary<string, string>() { { "token", token} } }
+                };
+            }
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
                 new List<string>() { scope },
-                new Dictionary<string, object>()
-                {
-                    { "plaid", new Dictionary<string, string>() { { "token", plaidToken} } }
-                });
+                postData);
 
             return result;
         }
 
-        /// <summary>
-        /// Add bank account with public token details
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="publicToken"></param>
-        /// <returns>Bank account with id</returns>
-        public async Task<BankAccountModel> AddPlaidWithLinkAsync(string accountId,
-            string publicToken)
-        {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
-
-            if (string.IsNullOrEmpty(publicToken))
-                throw new ArgumentNullException(nameof(publicToken));
-
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
-                accountId);
-
-            string endpoint = string.Format(Endpoint.AddBankAccount.Value(), accountId);
-
-            BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
-                new List<string>() { scope },
-                new Dictionary<string, object>()
-                {
-                    { "plaidLink", new Dictionary<string, string>() { { "publicToken", publicToken } } }
-                });
-
-            return result;
-        }
-
-        public async Task<bool> InitiateMicroDepositsAsync(string accountId,
+        public async Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
            string bankAccountId)
         {
             if (string.IsNullOrEmpty(accountId))
@@ -199,10 +185,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
+            string scope = string.Format(BankAccountScope.Write.Value(),
               accountId);
 
-            string endpoint = string.Format(Endpoint.InitiateMicroDeposite.Value(), accountId, bankAccountId);
+            string endpoint = string.Format(BankAccountEndpoint.InitiateMicroDepositeVerification.Value(), accountId, bankAccountId);
 
             bool success = await moovClient.PostAsync<bool>(endpoint,
                 new List<string>() { scope });
@@ -210,7 +196,7 @@
             return success;
         }
 
-        public async Task<bool> CompleteMicroDepositsAsync(string accountId,
+        public async Task<bool> CompleteMicroDepositVerificationAsync(string accountId,
            string bankAccountId)
         {
             if (string.IsNullOrEmpty(accountId))
@@ -219,10 +205,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(Scope.BankAccountsWrite.Value(),
+            string scope = string.Format(BankAccountScope.Write.Value(),
               accountId);
 
-            string endpoint = string.Format(Endpoint.CompleteMicroDeposite.Value(), accountId, bankAccountId);
+            string endpoint = string.Format(BankAccountEndpoint.CompleteMicroDepositeVerification.Value(), accountId, bankAccountId);
 
             bool success = await moovClient.PutAsync<bool>(endpoint,
                 new List<string>() { scope });
