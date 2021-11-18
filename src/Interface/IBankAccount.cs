@@ -18,12 +18,12 @@
         Task<bool> DisableAsync(string accountId,
             string bankAccountId);
 
-        Task<BankAccountModel> AddAsync(string accountId,
+        Task<BankAccountModel> CreateAsync(string accountId,
             BankAccountModel bankAccount);
 
-        Task<BankAccountModel> AddPlaidAsync(string accountId,
+        Task<BankAccountModel> CreateAsync(string accountId,
             string token,
-            bool isPublicToken);
+            bool usingPlaidLink = false);
 
         Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
            string bankAccountId);

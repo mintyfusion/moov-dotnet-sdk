@@ -36,10 +36,10 @@
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            string scope = string.Format(BankAccountScope.Read.Value(),
+            string scope = Utility.Format(BankAccountScope.Read.Value(),
                 accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.List.Value(), accountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.List.Value(), accountId);
 
             IList<BankAccountModel> bankAccountList = await moovClient.GetAsync<IList<BankAccountModel>>(endpoint,
                 new List<string>() { scope });
@@ -64,10 +64,12 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(BankAccountScope.Read.Value(),
+            string scope = Utility.Format(BankAccountScope.Read.Value(),
                 accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.Get.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Get.Value(),
+                accountId,
+                bankAccountId);
 
             BankAccountModel bankAccount = await moovClient.GetAsync<BankAccountModel>(endpoint,
                 new List<string>() { scope });
@@ -92,10 +94,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(BankAccountScope.Write.Value(),
+            string scope = Utility.Format(BankAccountScope.Write.Value(),
                accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.Disable.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Disable.Value(), accountId, bankAccountId);
 
             bool success = await moovClient.DeleteAsync<bool>(endpoint,
                 new List<string>() { scope });
@@ -109,7 +111,7 @@
         /// <param name="accountId"></param>
         /// <param name="bankAccount"></param>
         /// <returns>BankAccountModel with id</returns>
-        public async Task<BankAccountModel> AddAsync(string accountId,
+        public async Task<BankAccountModel> CreateAsync(string accountId,
             BankAccountModel bankAccount)
         {
             if (string.IsNullOrEmpty(accountId))
@@ -118,10 +120,10 @@
             if (bankAccount == null)
                 throw new ArgumentNullException(nameof(bankAccount));
 
-            string scope = string.Format(BankAccountScope.Write.Value(),
+            string scope = Utility.Format(BankAccountScope.Write.Value(),
                 accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.Create.Value(), accountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Create.Value(), accountId);
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
                 new List<string>() { scope },
@@ -135,11 +137,11 @@
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="token"></param>
-        /// <param name="isPublicToken">True if add plaid with link, false if add plaid with token</param>
+        /// <param name="usingPlaidLink">True if add plaid with link, false if add plaid with token</param>
         /// <returns>Bankaccount</returns>
-        public async Task<BankAccountModel> AddPlaidAsync(string accountId,
+        public async Task<BankAccountModel> CreateAsync(string accountId,
             string token,
-            bool isPublicToken)
+            bool usingPlaidLink = false)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -147,26 +149,20 @@
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
 
-            string scope = string.Format(BankAccountScope.Write.Value(),
+            string scope = Utility.Format(BankAccountScope.Write.Value(),
                 accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.Create.Value(), accountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Create.Value(), accountId);
 
-            IDictionary<string, object> postData = null;
+            IDictionary<string, object> postData = new Dictionary<string, object>();
 
-            if (isPublicToken)
+            if (usingPlaidLink)
             {
-                postData = new Dictionary<string, object>()
-                {
-                    { "plaidLink", new Dictionary<string, string>() { { "publicToken", token} } }
-                };
+                postData["plaidLink"] = new Dictionary<string, string>() { { "publicToken", token } };
             }
             else
             {
-                postData = new Dictionary<string, object>()
-                {
-                    { "plaid", new Dictionary<string, string>() { { "token", token} } }
-                };
+                postData["plaid"] = new Dictionary<string, string>() { { "token", token } };
             }
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
@@ -185,10 +181,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(BankAccountScope.Write.Value(),
+            string scope = Utility.Format(BankAccountScope.Write.Value(),
               accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.InitiateMicroDepositeVerification.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.InitiateMicroDepositeVerification.Value(), accountId, bankAccountId);
 
             bool success = await moovClient.PostAsync<bool>(endpoint,
                 new List<string>() { scope });
@@ -205,10 +201,10 @@
             if (string.IsNullOrEmpty(bankAccountId))
                 throw new ArgumentNullException(nameof(bankAccountId));
 
-            string scope = string.Format(BankAccountScope.Write.Value(),
+            string scope = Utility.Format(BankAccountScope.Write.Value(),
               accountId);
 
-            string endpoint = string.Format(BankAccountEndpoint.CompleteMicroDepositeVerification.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.CompleteMicroDepositeVerification.Value(), accountId, bankAccountId);
 
             bool success = await moovClient.PutAsync<bool>(endpoint,
                 new List<string>() { scope });

@@ -57,11 +57,14 @@
         Read
     }
 
-    public enum ProfileScope
+    public enum ProfileEncrichmentScope
     {
         [StrProp("/accounts/{0}/profile-enrichment.read")]
-        ProfileImageRead,
+        Read,
+    }
 
+    public enum ProfileScope
+    {
         [StrProp("/accounts/{0}/profile.read")]
         Read,
 
@@ -117,13 +120,13 @@
     public enum AccountEndpoint
     {
         [StrProp("/accounts")]
-        Get,
+        List,
 
         [StrProp("/accounts")]
         Create,
 
         [StrProp("/accounts/{0}")]
-        GetById,
+        Get,
 
         [StrProp("/accounts/{0}")]
         Update,
