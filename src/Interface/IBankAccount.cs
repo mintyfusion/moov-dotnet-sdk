@@ -23,7 +23,7 @@
 
         Task<BankAccountModel> CreateAsync(string accountId,
             string token,
-            bool usingPlaidLink = false);
+            bool usePlaidLink = false);
 
         Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
            string bankAccountId);

@@ -128,7 +128,7 @@
             bool addTokenToAuthHeader = true)
         {
             if (scopeList == null)
-                throw new InvalidOperationException("MoovClient:GetTokenAsync - scopeList cannot be null or empty.");
+                throw new ArgumentNullException(nameof(scopeList));
 
             string scope = string.Join(" ", scopeList);
 

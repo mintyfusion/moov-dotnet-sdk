@@ -137,11 +137,11 @@
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="token"></param>
-        /// <param name="usingPlaidLink">True if add plaid with link, false if add plaid with token</param>
+        /// <param name="usePlaidLink">True if add plaid with link, false if add plaid with token</param>
         /// <returns>Bankaccount</returns>
         public async Task<BankAccountModel> CreateAsync(string accountId,
             string token,
-            bool usingPlaidLink = false)
+            bool usePlaidLink = false)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -156,13 +156,13 @@
 
             IDictionary<string, object> postData = new Dictionary<string, object>();
 
-            if (usingPlaidLink)
+            if (usePlaidLink)
             {
-                postData["plaidLink"] = new Dictionary<string, string>() { { "publicToken", token } };
+                postData.Add("plaidLink", new Dictionary<string, string>() { { "publicToken", token } });
             }
             else
             {
-                postData["plaid"] = new Dictionary<string, string>() { { "token", token } };
+                postData.Add("plaid", new Dictionary<string, string>() { { "token", token } });
             }
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
