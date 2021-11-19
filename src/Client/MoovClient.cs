@@ -7,7 +7,6 @@
     using Model.Token;
     using System;
     using System.Collections.Generic;
-    using System.Net;
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
@@ -44,18 +43,15 @@
         /// </summary>
         /// <param name="scopeList">List of scopes to retrieve the token before making actual request.</param>
         /// <param name="endpoint">Endpoint of the request.</param>
-        /// <param name="refreshToken">Optional</param>
         /// <returns>T</returns>
-        /// <exception cref="InvalidOperationException">Throws ArgumentNullException when both scopeList or refreshToken are NULL or empty.</exception>
+        /// <exception cref="InvalidOperationException">Throws ArgumentNullException when scopeList are NULL or empty.</exception>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
         public async Task<T> GetAsync<T>(string endpoint,
-            IList<string> scopeList = null,
-            IDictionary<string, string> queryParams = null,
-            string refreshToken = "")
+            IList<string> scopeList,
+            IDictionary<string, string> queryParams = null)
         {
-            await GetTokenAsync(scopeList,
-                refreshToken);
+            await GetTokenAsync(scopeList);
 
             if (queryParams != null && queryParams.Count > 0)
             {
@@ -82,26 +78,14 @@
 
             HttpResponseMessage response = await httpClient.GetAsync(endpoint);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseContent = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(responseContent))
-                    return default;
-
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-
-            throw new MoovSdkException(response.ReasonPhrase);
+            return await ParseResponse<T>(response);
         }
 
         public async Task<T> PostAsync<T>(string endpoint,
-            IList<string> scopeList = null,
-            object postData = null,
-            string refreshToken = "")
+            IList<string> scopeList,
+            object postData = null)
         {
-            await GetTokenAsync(scopeList,
-                refreshToken);
+            await GetTokenAsync(scopeList);
 
             StringContent stringContent = null;
 
@@ -118,26 +102,14 @@
             HttpResponseMessage response = await httpClient.PostAsync(endpoint,
                 stringContent);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseContent = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(responseContent))
-                    return default;
-
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-
-            throw new MoovSdkException(response.ReasonPhrase);
+            return await ParseResponse<T>(response);
         }
 
         public async Task<T> PutAsync<T>(string endpoint,
-            IList<string> scopeList = null,
-            object postData = null,
-            string refreshToken = "")
+            IList<string> scopeList,
+            object postData = null)
         {
-            await GetTokenAsync(scopeList,
-                refreshToken);
+            await GetTokenAsync(scopeList);
 
             StringContent stringContent = null;
 
@@ -154,39 +126,17 @@
             HttpResponseMessage response = await httpClient.PutAsync(endpoint,
                 stringContent);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseContent = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(responseContent))
-                    return default;
-
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-
-            throw new MoovSdkException(response.ReasonPhrase);
+            return await ParseResponse<T>(response);
         }
 
         public async Task<T> DeleteAsync<T>(string endpoint,
-            IList<string> scopeList = null,
-            string refreshToken = "")
+            IList<string> scopeList)
         {
-            await GetTokenAsync(scopeList,
-                refreshToken);
+            await GetTokenAsync(scopeList);
 
             HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseContent = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(responseContent))
-                    return default;
-
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-
-            throw new MoovSdkException(response.ReasonPhrase);
+            return await ParseResponse<T>(response);
         }
         #endregion Public Methods
 
@@ -195,16 +145,15 @@
         /// Get's the token based on scopeList or refresh token provided.
         /// </summary>
         /// <param name="scopeList">List of scopes to retrieve the token before making actual request.</param>
-        /// <param name="refreshToken">Optional</param>
         /// <param name="addTokenToAuthHeader">Adds token as Authorization Header for outgoing HttpRequest</param>
         /// <returns>T</returns>
-        /// <exception cref="InvalidOperationException">Throws ArgumentNullException when both scopeList or refreshToken are NULL or empty.</exception>
+        /// <exception cref="InvalidOperationException">Throws ArgumentNullException when scopeList are NULL or empty.</exception>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
-        private async Task<string> GetTokenAsync(IList<string> scopeList = null,
-            string refreshToken = "", bool addTokenToAuthHeader = true)
+        private async Task<string> GetTokenAsync(IList<string> scopeList,
+            bool addTokenToAuthHeader = true)
         {
-            if (scopeList == null && string.IsNullOrEmpty(refreshToken))
-                throw new InvalidOperationException("MoovClient:GetTokenAsync - Both scopeList and refreshToken cannot be null or empty.");
+            if (scopeList == null)
+                throw new ArgumentNullException(nameof(scopeList));
 
             string scope = string.Join(" ", scopeList);
 
@@ -212,9 +161,8 @@
             {
                 ClientId = clientId,
                 ClientSecret = clientSecret,
-                GrantType = scopeList != null ? GrantType.ClientCredentials.Value() : GrantType.RefreshToken.Value(),
-                Scope = scope,
-                RefreshToken = refreshToken
+                GrantType = GrantType.ClientCredentials.Value(),
+                Scope = scope
             };
 
             string jsonString = JsonSerializer.Serialize(requestTokenModel, new JsonSerializerOptions
@@ -222,7 +170,7 @@
                 IgnoreNullValues = true,
             });
 
-            HttpResponseMessage response = await httpClient.PostAsync(Endpoint.GetAccessToken.Value(),
+            HttpResponseMessage response = await httpClient.PostAsync(TokenEndpoint.Get.Value(),
                 new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
@@ -243,6 +191,21 @@
         public void AddHeader(string key, string value)
         {
             httpClient.DefaultRequestHeaders.Add(key, value);
+        }
+
+        private async Task<T> ParseResponse<T>(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(responseContent))
+                    return default;
+
+                return JsonSerializer.Deserialize<T>(responseContent);
+            }
+
+            throw new MoovSdkException(response.ReasonPhrase);
         }
         #endregion Private Methods
     }

@@ -11,6 +11,25 @@
     {
         #region Methods
         Task<IList<BankAccountModel>> ListAsync(string accountId);
+
+        Task<BankAccountModel> GetAsync(string accountId,
+            string bankAccountId);
+
+        Task<bool> DisableAsync(string accountId,
+            string bankAccountId);
+
+        Task<BankAccountModel> CreateAsync(string accountId,
+            BankAccountModel bankAccount);
+
+        Task<BankAccountModel> CreateAsync(string accountId,
+            string token,
+            bool usePlaidLink = false);
+
+        Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
+           string bankAccountId);
+
+        Task<bool> CompleteMicroDepositVerificationAsync(string accountId,
+           string bankAccountId);
         #endregion Methods
     }
     #endregion Interface
