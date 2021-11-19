@@ -10,8 +10,18 @@
     {
         #region Methods
         Task<T> GetAsync<T>(string endpoint,
-            IList<string> scopeList = null,
-            string refreshToken = "");
+            IList<string> scopeList);
+
+        Task<T> PostAsync<T>(string endpoint,
+            IList<string> scopeList,
+            object postData = null);
+
+        Task<T> PutAsync<T>(string endpoint,
+            IList<string> scopeList,
+            object postData = null);
+
+        Task<T> DeleteAsync<T>(string endpoint,
+            IList<string> scopeList);
         #endregion Methods
     }
     #endregion Interface
