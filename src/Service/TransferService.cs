@@ -46,10 +46,10 @@
             if (transferModel == null)
                 throw new ArgumentNullException(nameof(transferModel));
 
-            string scope = string.Format(Scope.TransfersWrite.Value(),
+            string scope = string.Format(TransferScope.Write.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.CreateTransfer.Value(), accountId);
+            string endpoint = string.Format(TransferEndpoint.Create.Value(), accountId);
 
             moovClient.AddHeader("X-Idempotency-Key", key);
 
@@ -76,10 +76,10 @@
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException("accountId");
 
-            string scope = string.Format(Scope.TransfersRead.Value(),
+            string scope = string.Format(TransferScope.Read.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.ListTransfers.Value(), accountId);
+            string endpoint = string.Format(TransferEndpoint.List.Value(), accountId);
 
             IDictionary<string, string> queryParams = null;
 
@@ -119,10 +119,10 @@
             if (string.IsNullOrEmpty(transferId))
                 throw new ArgumentNullException(nameof(transferId));
 
-            string scope = string.Format(Scope.TransfersRead.Value(),
+            string scope = string.Format(TransferScope.Read.Value(),
                 accountId);
 
-            string endpoint = string.Format(Endpoint.GetTransfer.Value(), transferId);
+            string endpoint = string.Format(TransferEndpoint.Get.Value(), transferId);
 
             moovClient.AddHeader("X-Account-ID", accountId);
 
@@ -148,10 +148,10 @@
             if (transferOptionsRequestModel == null)
                 throw new ArgumentNullException("transferOptionsRequestModel");
 
-            string scope = string.Format(Scope.TransfersRead.Value(),
+            string scope = string.Format(TransferScope.Read.Value(),
                 accountId);
 
-            string endpoint = Endpoint.GetTransferOptions.Value();
+            string endpoint = TransferEndpoint.GetTransferOptions.Value();
 
             TransferOptionsResponseModel transferOptionsResponse = await moovClient.PostAsync<TransferOptionsResponseModel>(endpoint,
                 new List<string>() { scope },
