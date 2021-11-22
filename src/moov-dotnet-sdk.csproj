@@ -12,4 +12,9 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\Account\" />
+    <Folder Include="Model\PaymentMethod\" />
+    <Folder Include="Model\Wallet\" />
+  </ItemGroup>
 </Project>
