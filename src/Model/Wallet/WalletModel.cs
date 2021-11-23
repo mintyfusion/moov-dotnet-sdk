@@ -12,7 +12,7 @@
         public string Id { get; set; }
 
         [JsonPropertyName("availableBalance")]
-        public AmountModel availableBalance { get; set; }
+        public AmountModel AvailableBalance { get; set; }
     }
     #endregion Class
 }

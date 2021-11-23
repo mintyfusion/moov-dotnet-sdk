@@ -3,6 +3,7 @@
     #region namespace
     using Exception;
     using Interface;
+    using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Configuration;
     using Model.Token;
     using System;
@@ -59,10 +60,9 @@
 
             if (queryParams != null && queryParams.Count > 0)
             {
-                string queryString = queryParams.ToQueryString();
-
-                if (!string.IsNullOrEmpty(queryString))
-                    endpoint = endpoint + "?" + queryString;
+                // Apply query string after removing keys that have null or empty values.
+                endpoint = QueryHelpers.AddQueryString(endpoint,
+                    queryParams.Where(f => !string.IsNullOrEmpty(f.Value)).ToDictionary(t => t.Key, t => t.Value));
             }
 
             AddHeaders(headers);

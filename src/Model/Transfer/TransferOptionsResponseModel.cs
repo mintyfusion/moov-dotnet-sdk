@@ -10,10 +10,10 @@
     public class TransferOptionsResponseModel
     {
         [JsonPropertyName("sourceOptions")]
-        public IList<PaymentMethodModel> SourceOptionList { get; set; }
+        public IList<PaymentMethodModel> SourceOptions { get; set; }
 
         [JsonPropertyName("destinationOptions")]
-        public IList<PaymentMethodModel> DourceOptionList { get; set; }
+        public IList<PaymentMethodModel> DestinationOptions { get; set; }
     }
     #endregion Class
 }

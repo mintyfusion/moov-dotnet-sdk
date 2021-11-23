@@ -2,6 +2,7 @@
 {
     #region Namespace
     using System.Text.Json.Serialization;
+    using Wallet;
     #endregion
 
     #region Class

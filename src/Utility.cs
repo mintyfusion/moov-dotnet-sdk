@@ -16,12 +16,6 @@
         {
             return string.Format(formatString, param);
         }
-
-        public static string ToQueryString(this IDictionary<string, string> source)
-        {
-            return string.Join("&", source.Where(f => !string.IsNullOrEmpty(f.Value))
-                .Select(kvp => String.Format("{0}={1}", HttpUtility.UrlEncode(kvp.Key), HttpUtility.UrlEncode(kvp.Value))).ToArray());
-        }
         #endregion Public Static Methods
     }
     #endregion Class

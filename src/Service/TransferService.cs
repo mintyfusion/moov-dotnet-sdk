@@ -54,7 +54,7 @@
             IDictionary<string, string> transferDetails = await moovClient.PostAsync<IDictionary<string, string>>(endpoint,
                 new List<string>() { scope },
                 transferModel,
-                new Dictionary<string, string>() { { "X-Idempotency-Key" , key} });
+                new Dictionary<string, string>() { { "X-Idempotency-Key", key } });
 
             return transferDetails["transferID"];
         }
@@ -73,7 +73,7 @@
             int? skip = null)
         {
             if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException("accountId");
+                throw new ArgumentNullException(nameof(accountId));
 
             string scope = Utility.Format(TransferScope.Read.Value(),
                 accountId);
@@ -84,11 +84,7 @@
 
             // Convert model to <string, string> keyvalue pair query dictionary
             if (transferFilterModel != null)
-            {
-                queryParams = transferFilterModel.GetType()
-                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .ToDictionary(prop => prop.Name, prop => (string)prop.GetValue(transferFilterModel, null));
-            }
+                queryParams = (IDictionary<string, string>)transferFilterModel.AsDictionary();
 
             if (count.HasValue)
                 queryParams["count"] = count.ToString();
@@ -141,10 +137,10 @@
             TransferOptionsRequestModel transferOptionsRequestModel)
         {
             if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException("accountId");
+                throw new ArgumentNullException(nameof(accountId));
 
             if (transferOptionsRequestModel == null)
-                throw new ArgumentNullException("transferOptionsRequestModel");
+                throw new ArgumentNullException(nameof(transferOptionsRequestModel));
 
             string scope = Utility.Format(TransferScope.Read.Value(),
                 accountId);
