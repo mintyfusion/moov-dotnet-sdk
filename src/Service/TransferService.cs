@@ -6,7 +6,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -56,7 +55,7 @@
                 transferModel,
                 new Dictionary<string, string>() { { Constant.IDEMPOTENCY, key } });
 
-            return transferDetails["transferID"];
+            return transferDetails[Constant.TRANSFERID];
         }
 
         /// <summary>
@@ -83,8 +82,8 @@
             IDictionary<string, string> queryParams = new Dictionary<string, string>();
 
             // Convert model to <string, string> keyvalue pair query dictionary
-            if (transferFilterModel != null)
-                queryParams = (IDictionary<string, string>)transferFilterModel.AsDictionary();
+            if (transferFilterModel != null)   
+                    queryParams = transferFilterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
 
             if (count.HasValue)
                 queryParams["count"] = count.ToString();
@@ -121,8 +120,8 @@
 
             TransferModel transfer = await moovClient.GetAsync<TransferModel>(endpoint,
                 new List<string>() { scope },
-                new Dictionary<string, string> { { "accountId", accountId } },
-                new Dictionary<string, string>() { { "X-Account-ID", accountId } });
+                new Dictionary<string, string> { { Constant.ACCOUNTID, accountId } },
+                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, accountId } });
 
             return transfer;
         }

@@ -59,11 +59,7 @@
             await GetTokenAsync(scopeList);
 
             if (queryParams != null && queryParams.Count > 0)
-            {
-                // Apply query string after removing keys that have null or empty values.
-                endpoint = QueryHelpers.AddQueryString(endpoint,
-                    queryParams.Where(f => !string.IsNullOrEmpty(f.Value)).ToDictionary(t => t.Key, t => t.Value));
-            }
+                endpoint = QueryHelpers.AddQueryString(endpoint, queryParams);
 
             AddHeaders(headers);
 

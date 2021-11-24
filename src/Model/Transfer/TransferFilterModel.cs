@@ -9,7 +9,7 @@
     public class TransferFilterModel
     {
         [JsonPropertyName("accountIDs")]
-        public IList<string> AccountIDList { get; set; }
+        public string AccountIDs { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; }
