@@ -82,14 +82,14 @@
             IDictionary<string, string> queryParams = new Dictionary<string, string>();
 
             // Convert model to <string, string> keyvalue pair query dictionary
-            if (transferFilterModel != null)   
-                    queryParams = transferFilterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
+            if (transferFilterModel != null)
+                queryParams = transferFilterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
 
             if (count.HasValue)
-                queryParams["count"] = count.ToString();
+                queryParams[Constant.COUNT] = count.ToString();
 
             if (skip.HasValue)
-                queryParams["skip"] = skip.ToString();
+                queryParams[Constant.SKIP] = skip.ToString();
 
             IList<TransferModel> tranferList = await moovClient.GetAsync<IList<TransferModel>>(endpoint,
                 new List<string>() { scope },

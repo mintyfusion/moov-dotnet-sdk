@@ -122,6 +122,33 @@
             return await ParseResponse<T>(response);
         }
 
+        public async Task<T> Patch<T>(string endpoint,
+            IList<string> scopeList,
+            object patchdata = null,
+            IDictionary<string, string> headers = null)
+        {
+            await GetTokenAsync(scopeList);
+
+            StringContent stringContent = null;
+
+            if (patchdata != null)
+            {
+                string json = JsonSerializer.Serialize(patchdata, new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                });
+
+                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            AddHeaders(headers);
+
+            HttpResponseMessage response = await httpClient.PatchAsync(endpoint,
+                stringContent);
+
+            return await ParseResponse<T>(response);
+        }
+
         public async Task<T> DeleteAsync<T>(string endpoint,
             IList<string> scopeList,
             IDictionary<string, string> headers = null)

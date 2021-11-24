@@ -24,6 +24,11 @@
             object postData = null,
             IDictionary<string, string> headers = null);
 
+        Task<T> Patch<T>(string endpoint,
+            IList<string> scopeList,
+            object patchdata = null,
+            IDictionary<string, string> headers = null);
+
         Task<T> DeleteAsync<T>(string endpoint,
             IList<string> scopeList,
             IDictionary<string, string> headers = null);

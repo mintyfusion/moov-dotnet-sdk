@@ -17,6 +17,10 @@
         public const string ACCOUNTID = "accountId";
 
         public const string TRANSFERID = "transferID";
+
+        public const string SKIP = "skip";
+
+        public const string COUNT = "count";
         #endregion Fields
     }
     #endregion Class
