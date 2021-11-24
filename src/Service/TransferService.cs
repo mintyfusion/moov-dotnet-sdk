@@ -54,7 +54,7 @@
             IDictionary<string, string> transferDetails = await moovClient.PostAsync<IDictionary<string, string>>(endpoint,
                 new List<string>() { scope },
                 transferModel,
-                new Dictionary<string, string>() { { "X-Idempotency-Key", key } });
+                new Dictionary<string, string>() { { Constant.IDEMPOTENCY, key } });
 
             return transferDetails["transferID"];
         }

@@ -9,6 +9,8 @@
         public const string MOOV_CLIENT_ID = "Moov:ClientId";
 
         public const string MOOV_SECRET = "Moov:ClientSecret";
+
+        public const string IDEMPOTENCY = "X-Idempotency-Key";
         #endregion Fields
     }
     #endregion Class
