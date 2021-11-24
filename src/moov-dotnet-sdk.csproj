@@ -10,6 +10,12 @@
     <PackageReference Include="Essentials" Version="1.0.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\Account\" />
+    <Folder Include="Model\PaymentMethod\" />
+    <Folder Include="Model\Wallet\" />
+  </ItemGroup>
 </Project>

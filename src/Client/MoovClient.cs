@@ -3,14 +3,17 @@
     #region namespace
     using Exception;
     using Interface;
+    using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Configuration;
     using Model.Token;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using System.Web;
     using Tutkoo.Essentials;
     #endregion namespace
 
@@ -42,14 +45,23 @@
         /// </summary>
         /// <param name="scopeList">List of scopes to retrieve the token before making actual request.</param>
         /// <param name="endpoint">Endpoint of the request.</param>
+        /// <param name="queryParams">Extra parameter to append at end of url</param>
+        /// <param name="headers">Extra special headers</param>
         /// <returns>T</returns>
         /// <exception cref="InvalidOperationException">Throws ArgumentNullException when scopeList are NULL or empty.</exception>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
         public async Task<T> GetAsync<T>(string endpoint,
-            IList<string> scopeList)
+            IList<string> scopeList,
+            IDictionary<string, string> queryParams = null,
+            IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
+
+            if (queryParams != null && queryParams.Count > 0)
+                endpoint = QueryHelpers.AddQueryString(endpoint, queryParams);
+
+            AddHeaders(headers);
 
             HttpResponseMessage response = await httpClient.GetAsync(endpoint);
 
@@ -58,7 +70,8 @@
 
         public async Task<T> PostAsync<T>(string endpoint,
             IList<string> scopeList,
-            object postData = null)
+            object postData = null,
+            IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
 
@@ -73,6 +86,8 @@
 
                 stringContent = new StringContent(json, Encoding.UTF8, "application/json");
             }
+
+            AddHeaders(headers);
 
             HttpResponseMessage response = await httpClient.PostAsync(endpoint,
                 stringContent);
@@ -82,7 +97,8 @@
 
         public async Task<T> PutAsync<T>(string endpoint,
             IList<string> scopeList,
-            object postData = null)
+            object postData = null,
+            IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
 
@@ -98,6 +114,8 @@
                 stringContent = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
+            AddHeaders(headers);
+
             HttpResponseMessage response = await httpClient.PutAsync(endpoint,
                 stringContent);
 
@@ -105,9 +123,12 @@
         }
 
         public async Task<T> DeleteAsync<T>(string endpoint,
-            IList<string> scopeList)
+            IList<string> scopeList,
+            IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
+
+            AddHeaders(headers);
 
             HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
 
@@ -146,7 +167,7 @@
             });
 
             HttpResponseMessage response = await httpClient.PostAsync(TokenEndpoint.Get.Value(),
-                new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json"));
+                new StringContent(jsonString, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -176,6 +197,17 @@
             }
 
             throw new MoovSdkException(response.ReasonPhrase);
+        }
+
+        private void AddHeaders(IDictionary<string, string> headers)
+        {
+            if (headers != null && headers.Count > 0)
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
         }
         #endregion Private Methods
     }
