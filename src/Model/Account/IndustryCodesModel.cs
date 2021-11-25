@@ -14,7 +14,7 @@
         public string Sic { get; set; }
 
         [JsonPropertyName("mcc")]
-        public string Mcc { get; set; }
+        public string MCC { get; set; }
     }
     #endregion Class
 }

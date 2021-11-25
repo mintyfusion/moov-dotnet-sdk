@@ -22,7 +22,7 @@
         public IList<string> ParseErrors { get; set; }
 
         [JsonPropertyName("uploadedAt")]
-        public string UploadedAt { get; set; }
+        public DateTime UploadedAt { get; set; }
     }
     #endregion Class
 }

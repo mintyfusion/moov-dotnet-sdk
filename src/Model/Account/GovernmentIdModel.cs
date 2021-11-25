@@ -11,7 +11,7 @@
         public GovernmentIdPropertyModel SSN { get; set; }
 
         [JsonPropertyName("itin")]
-        public GovernmentIdPropertyModel Itin { get; set; }
+        public GovernmentIdPropertyModel ITIN { get; set; }
     }
     #endregion Class
 }

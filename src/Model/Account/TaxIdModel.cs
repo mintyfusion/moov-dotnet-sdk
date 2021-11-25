@@ -5,10 +5,10 @@
     #endregion
 
     #region Class
-    public class TaxIdModel
+    public class TaxIDModel
     {
         [JsonPropertyName("ein")]
-        public EinModel Ein { get; set; }
+        public EINModel Ein { get; set; }
     }
     #endregion Class
 }

@@ -2,6 +2,7 @@
 {
     #region Namespace
     using Interface;
+    using Microsoft.Extensions.Configuration;
     using Model.Transfer;
     using System;
     using System.Collections.Generic;
@@ -15,12 +16,17 @@
     {
         #region Fields
         private readonly IClient moovClient = null;
+
+        private readonly string HouseAccountId = string.Empty;
         #endregion Fields
 
         #region Constructor
-        public TransferService(IClient moovClient)
+        public TransferService(IClient moovClient,
+            IConfiguration configuration)
         {
             this.moovClient = moovClient;
+
+            HouseAccountId = configuration[Constant.MOOV_HOUSE_ACCOUNT_ID];
         }
         #endregion Constructor
 
@@ -29,18 +35,18 @@
         /// Initiate tranfer for account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="key"></param>
+        /// <param name="idempotencyKey"></param>
         /// <param name="transferModel"></param>
         /// <returns>Transfer unique id</returns>
-        public async Task<string> InitiateAsync(string accountId,
-            string key,
+        public async Task<TransferResultModel> InitiateAsync(string accountId,
+            string idempotencyKey,
             TransferModel transferModel)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (string.IsNullOrEmpty(key))
-                throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrEmpty(idempotencyKey))
+                throw new ArgumentNullException(nameof(idempotencyKey));
 
             if (transferModel == null)
                 throw new ArgumentNullException(nameof(transferModel));
@@ -50,12 +56,12 @@
 
             string endpoint = Utility.Format(TransferEndpoint.Create.Value(), accountId);
 
-            IDictionary<string, string> transferDetails = await moovClient.PostAsync<IDictionary<string, string>>(endpoint,
+            TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(endpoint,
                 new List<string>() { scope },
                 transferModel,
-                new Dictionary<string, string>() { { Constant.IDEMPOTENCY, key } });
+                new Dictionary<string, string>() { { Constant.IDEMPOTENCY, idempotencyKey } });
 
-            return transferDetails[Constant.TRANSFERID];
+            return transferResult;
         }
 
         /// <summary>
@@ -99,29 +105,35 @@
         }
 
         /// <summary>
-        /// Get singel transfer by id
+        /// Get single transfer by id
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="transferId"></param>
+        /// <param name="id"></param>
+        /// <param name="requestModel"></param>
         /// <returns>TransferModel</returns>
-        public async Task<TransferModel> GetAsync(string accountId,
-            string transferId)
+        public async Task<TransferModel> GetAsync(string id,
+            GetTransferRequestModel requestModel)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
 
-            if (string.IsNullOrEmpty(transferId))
-                throw new ArgumentNullException(nameof(transferId));
+            if (requestModel == null)
+                throw new ArgumentNullException(nameof(requestModel));
 
             string scope = Utility.Format(TransferScope.Read.Value(),
-                accountId);
+                requestModel.AccountId);
 
-            string endpoint = Utility.Format(TransferEndpoint.Get.Value(), transferId);
+            string endpoint = Utility.Format(TransferEndpoint.Get.Value(), id);
+
+            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+
+            // Convert model to <string, string> keyvalue pair query dictionary
+            if (requestModel != null)
+                queryParams = requestModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
 
             TransferModel transfer = await moovClient.GetAsync<TransferModel>(endpoint,
                 new List<string>() { scope },
-                new Dictionary<string, string> { { Constant.ACCOUNTID, accountId } },
-                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, accountId } });
+                queryParams,
+                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, HouseAccountId } });
 
             return transfer;
         }

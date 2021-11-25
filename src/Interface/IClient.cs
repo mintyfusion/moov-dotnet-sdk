@@ -26,7 +26,7 @@
 
         Task<T> Patch<T>(string endpoint,
             IList<string> scopeList,
-            object patchdata = null,
+            object data = null,
             IDictionary<string, string> headers = null);
 
         Task<T> DeleteAsync<T>(string endpoint,

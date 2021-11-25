@@ -18,7 +18,7 @@
         public string AcceptedIP { get; set; }
 
         [JsonPropertyName("documents")]
-        public IList<DocumentModel> DocumentList { get; set; }
+        public IList<DocumentModel> Documents { get; set; }
     }
     #endregion Class
 }

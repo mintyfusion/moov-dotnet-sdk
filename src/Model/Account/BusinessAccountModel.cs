@@ -23,7 +23,7 @@
         public string Description { get; set; }
 
         [JsonPropertyName("taxID")]
-        public TaxIdModel TaxId { get; set; }
+        public TaxIDModel TaxID { get; set; }
 
         [JsonPropertyName("industryCodes")]
         public IndustryCodesModel IndustryCodes { get; set; }

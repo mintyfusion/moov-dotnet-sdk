@@ -10,8 +10,8 @@
     public interface ITransfer
     {
         #region Methods
-        Task<string> InitiateAsync(string accountId,
-            string key,
+        Task<TransferResultModel> InitiateAsync(string accountId,
+            string idempotencyKey,
             TransferModel transferModel);
 
         Task<IList<TransferModel>> ListAsync(string accountId,
@@ -19,8 +19,8 @@
             int? count = null,
             int? skip = null);
 
-        Task<TransferModel> GetAsync(string accountId,
-            string transferId);
+        Task<TransferModel> GetAsync(string id,
+            GetTransferRequestModel requestModel);
 
         Task<TransferOptionsResponseModel> GetTransferOptionsAsync(string accountId,
             TransferOptionsRequestModel transferOptionsRequestModel);

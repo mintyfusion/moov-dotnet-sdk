@@ -10,13 +10,11 @@
 
         public const string MOOV_SECRET = "Moov:ClientSecret";
 
+        public const string MOOV_HOUSE_ACCOUNT_ID = "Moov:HouseAccountId";
+
         public const string IDEMPOTENCY = "X-Idempotency-Key";
 
         public const string X_ACCOUNTID = "X-Account-ID";
-
-        public const string ACCOUNTID = "accountId";
-
-        public const string TRANSFERID = "transferID";
 
         public const string SKIP = "skip";
 

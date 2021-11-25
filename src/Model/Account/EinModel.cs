@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class EinModel
+    public class EINModel
     {
         [JsonPropertyName("number")]
         public string Number { get; set; }

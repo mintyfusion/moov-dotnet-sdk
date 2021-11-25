@@ -124,16 +124,16 @@
 
         public async Task<T> Patch<T>(string endpoint,
             IList<string> scopeList,
-            object patchdata = null,
+            object data = null,
             IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
 
             StringContent stringContent = null;
 
-            if (patchdata != null)
+            if (data != null)
             {
-                string json = JsonSerializer.Serialize(patchdata, new JsonSerializerOptions
+                string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
                 {
                     IgnoreNullValues = true,
                 });
