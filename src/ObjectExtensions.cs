@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Text.Json.Serialization;
     #endregion Namespace
 
     #region Class
@@ -17,7 +18,7 @@
             return source.GetType().GetProperties(bindingAttr)
                 .ToDictionary
                 (
-                propInfo => propInfo.Name,
+                propInfo => propInfo.IsDefined(typeof(JsonPropertyNameAttribute), true) ? propInfo.GetCustomAttribute<JsonPropertyNameAttribute>().Name : propInfo.Name,
                 propInfo => propInfo.GetValue(source, null)
                 );
         }
