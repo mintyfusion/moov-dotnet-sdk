@@ -8,10 +8,10 @@
     public class IndustryCodesModel
     {
         [JsonPropertyName("naics")]
-        public string Naics { get; set; }
+        public string NAICS { get; set; }
 
         [JsonPropertyName("sic")]
-        public string Sic { get; set; }
+        public string SIC { get; set; }
 
         [JsonPropertyName("mcc")]
         public string MCC { get; set; }
