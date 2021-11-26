@@ -28,13 +28,6 @@
         private readonly string platformID = string.Empty;
         #endregion Fields
 
-        #region Properties
-        public string PlatformID
-        {
-            get => platformID;
-        }
-        #endregion Properties
-
         #region Constructor
         public MoovClient(IConfiguration configuration,
             IHttpClientFactory httpClientFactory)
@@ -46,6 +39,13 @@
             platformID = configuration[Constant.MOOV_PLATFORM_ID];
         }
         #endregion Constructor
+
+        #region Properties
+        public string PlatformID
+        {
+            get => platformID;
+        }
+        #endregion Properties
 
         #region Public Methods
         /// <summary>
@@ -61,13 +61,21 @@
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
         public async Task<T> GetAsync<T>(string endpoint,
             IList<string> scopeList,
-            IDictionary<string, string> queryParams = null,
+            object queryParametersObject = null,
             IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
 
-            if (queryParams != null && queryParams.Count > 0)
-                endpoint = QueryHelpers.AddQueryString(endpoint, queryParams);
+            if (queryParametersObject != null)
+            {
+                IDictionary<string, object> queryParams = queryParametersObject.AsDictionary();
+
+                if (queryParams != null)
+                {
+                    foreach (KeyValuePair<string, object> parameters in queryParams)
+                        endpoint = QueryHelpers.AddQueryString(endpoint, parameters.Key, (string)parameters.Value);
+                }
+            }
 
             AddHeaders(headers);
 
@@ -78,56 +86,36 @@
 
         public async Task<T> PostAsync<T>(string endpoint,
             IList<string> scopeList,
-            object postData = null,
+            object data = null,
             IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
 
-            StringContent stringContent = null;
+            if (headers == null)
+                headers = new Dictionary<string, string>();
 
-            if (postData != null)
-            {
-                string json = JsonSerializer.Serialize(postData, new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                });
-
-                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-
-            httpClient.DefaultRequestHeaders.Add(Constant.X_IDEMPOTENCY, Guid.NewGuid().ToString());
+            headers.Add(Constant.IDEMPOTENCY_KEY, 
+                Guid.NewGuid().ToString());
 
             AddHeaders(headers);
 
             HttpResponseMessage response = await httpClient.PostAsync(endpoint,
-                stringContent);
+                SerializeObjectAsJson(data));
 
             return await ParseResponse<T>(response);
         }
 
         public async Task<T> PutAsync<T>(string endpoint,
             IList<string> scopeList,
-            object postData = null,
+            object data = null,
             IDictionary<string, string> headers = null)
         {
             await GetTokenAsync(scopeList);
 
-            StringContent stringContent = null;
-
-            if (postData != null)
-            {
-                string json = JsonSerializer.Serialize(postData, new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                });
-
-                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-
             AddHeaders(headers);
 
             HttpResponseMessage response = await httpClient.PutAsync(endpoint,
-                stringContent);
+                SerializeObjectAsJson(data));
 
             return await ParseResponse<T>(response);
         }
@@ -139,22 +127,10 @@
         {
             await GetTokenAsync(scopeList);
 
-            StringContent stringContent = null;
-
-            if (data != null)
-            {
-                string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                });
-
-                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-
             AddHeaders(headers);
 
             HttpResponseMessage response = await httpClient.PatchAsync(endpoint,
-                stringContent);
+                SerializeObjectAsJson(data));
 
             return await ParseResponse<T>(response);
         }
@@ -221,7 +197,35 @@
             throw new MoovTokenException(response.ReasonPhrase);
         }
 
-        private async Task<T> ParseResponse<T>(HttpResponseMessage response)
+        private void AddHeaders(IDictionary<string, string> headers)
+        {
+            if (headers != null && headers.Count > 0)
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+        }
+
+        private static StringContent SerializeObjectAsJson(object data = null)
+        {
+            StringContent stringContent = null;
+
+            if (data != null)
+            {
+                string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                });
+
+                stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            return stringContent;
+        }
+
+        private static async Task<T> ParseResponse<T>(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
             {
@@ -234,17 +238,6 @@
             }
 
             throw new MoovSdkException(response.ReasonPhrase);
-        }
-
-        private void AddHeaders(IDictionary<string, string> headers)
-        {
-            if (headers != null && headers.Count > 0)
-            {
-                foreach (KeyValuePair<string, string> keyValuePair in headers)
-                {
-                    httpClient.DefaultRequestHeaders.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
         }
         #endregion Private Methods
     }

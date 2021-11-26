@@ -1,7 +1,6 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Transfer
 {
     #region Namespace
-    using System.Collections.Generic;
     using System.Text.Json.Serialization;
     #endregion
 

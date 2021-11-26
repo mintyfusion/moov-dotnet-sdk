@@ -1,7 +1,6 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk
 {
     #region Namespace
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -18,27 +17,9 @@
             return source.GetType().GetProperties(bindingAttr)
                 .ToDictionary
                 (
-                propInfo => propInfo.IsDefined(typeof(JsonPropertyNameAttribute), true) ? propInfo.GetCustomAttribute<JsonPropertyNameAttribute>().Name : propInfo.Name,
-                propInfo => propInfo.GetValue(source, null)
+                    propInfo => propInfo.IsDefined(typeof(JsonPropertyNameAttribute), true) ? propInfo.GetCustomAttribute<JsonPropertyNameAttribute>().Name : propInfo.Name,
+                    propInfo => propInfo.GetValue(source, null)
                 );
-        }
-
-        public static T ToObject<T>(this IDictionary<string, object> source) where T : class, new()
-        {
-            T someObject = new T();
-
-            Type someObjectType = someObject.GetType();
-
-            foreach (var item in source)
-            {
-                PropertyInfo property = someObjectType
-                    .GetProperty(item.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-
-                if (property != null)
-                    property.SetValue(someObject, item.Value, null);
-            }
-
-            return someObject;
         }
         #endregion Public Static Methods
     }

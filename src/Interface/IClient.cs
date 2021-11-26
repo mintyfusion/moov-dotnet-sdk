@@ -13,7 +13,7 @@
 
         Task<T> GetAsync<T>(string endpoint,
             IList<string> scopeList,
-            IDictionary<string, string> queryParams = null,
+            object queryParametersObject = null,
             IDictionary<string, string> headers = null);
 
         Task<T> PostAsync<T>(string endpoint,

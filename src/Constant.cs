@@ -12,9 +12,9 @@
 
         public const string MOOV_PLATFORM_ID = "Moov:PlatformID";
 
-        public const string X_IDEMPOTENCY = "X-Idempotency-Key";
+        public const string IDEMPOTENCY_KEY = "X-Idempotency-Key";
 
-        public const string X_ACCOUNTID = "X-Account-ID";
+        public const string X_ACCOUNT_ID = "X-Account-ID";
         #endregion Fields
     }
     #endregion Class

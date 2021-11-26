@@ -5,7 +5,6 @@
     using Model.Transfer;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -46,8 +45,7 @@
             string endpoint = Utility.Format(TransferEndpoint.Create.Value(), accountId);
 
             TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(endpoint,
-                new List<string>() { scope },
-                transferModel);
+                new List<string>() { scope }, transferModel);
 
             return transferResult;
         }
@@ -69,15 +67,8 @@
 
             string endpoint = Utility.Format(TransferEndpoint.List.Value());
 
-            IDictionary<string, string> queryParams = new Dictionary<string, string>();
-
-            // Convert model to <string, string> keyvalue pair query dictionary
-            if (transferFilterModel != null)
-                queryParams = transferFilterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
             IList<TransferModel> tranferList = await moovClient.GetAsync<IList<TransferModel>>(endpoint,
-                new List<string>() { scope },
-                queryParams);
+                new List<string>() { scope }, transferFilterModel);
 
             return tranferList;
         }
@@ -102,16 +93,9 @@
 
             string endpoint = Utility.Format(TransferEndpoint.Get.Value(), id);
 
-            IDictionary<string, string> queryParams = new Dictionary<string, string>();
-
-            // Convert model to <string, string> keyvalue pair query dictionary
-            if (requestModel != null)
-                queryParams = requestModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
             TransferModel transfer = await moovClient.GetAsync<TransferModel>(endpoint,
-                new List<string>() { scope },
-                queryParams,
-                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, moovClient.PlatformID } });
+                new List<string>() { scope }, requestModel,
+                new Dictionary<string, string>() { { Constant.X_ACCOUNT_ID, moovClient.PlatformID } });
 
             return transfer;
         }
@@ -137,8 +121,7 @@
             string endpoint = TransferEndpoint.GetTransferOptions.Value();
 
             TransferOptionsResponseModel transferOptionsResponse = await moovClient.PostAsync<TransferOptionsResponseModel>(endpoint,
-                new List<string>() { scope },
-                transferOptionsRequestModel);
+                new List<string>() { scope }, transferOptionsRequestModel);
 
             return transferOptionsResponse;
         }

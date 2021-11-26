@@ -5,7 +5,6 @@
     using Model.Account;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -40,8 +39,7 @@
             string endpoint = Utility.Format(AccountEndpoint.Create.Value());
 
             AccountModel response = await moovClient.PostAsync<AccountModel>(endpoint,
-                new List<string> { scope },
-                requestModel);
+                new List<string> { scope }, requestModel);
 
             return response;
         }
@@ -56,21 +54,14 @@
             AccountFilterModel filterModel = null)
         {
             if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentException(nameof(accountId));
-
-            IDictionary<string, string> queryParams = null;
-
-            // Convert model to <string, string> keyvalue pair query dictionary
-            if (filterModel != null)
-                queryParams = filterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
+                throw new ArgumentException(null, nameof(accountId));
 
             string scope = Utility.Format(AccountScope.Read.Value());
 
             string endpoint = Utility.Format(AccountEndpoint.List.Value());
 
             IList<AccountModel> response = await moovClient.GetAsync<IList<AccountModel>>(endpoint,
-                new List<string> { scope },
-                queryParams);
+                new List<string> { scope }, filterModel);
 
             return response;
         }
@@ -115,8 +106,7 @@
             string endpoint = Utility.Format(AccountEndpoint.Update.Value(), accountId);
 
             AccountModel account = await moovClient.PutAsync<AccountModel>(endpoint,
-                new List<string> { scope },
-                updateRequestModel);
+                new List<string> { scope }, updateRequestModel);
 
             return account;
         }
@@ -141,8 +131,7 @@
             string endpoint = Utility.Format(AccountEndpoint.Patch.Value(), accountId);
 
             AccountModel account = await moovClient.Patch<AccountModel>(endpoint,
-                new List<string> { scope },
-                requestModel);
+                new List<string> { scope }, requestModel);
 
             return account;
         }
