@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class IndividualAccountModel : BaseAccountModel
+    public class IndividualAccountModel : AccountBaseModel
     {
         [JsonPropertyName("name")]
         public NameModel Name { get; set; }

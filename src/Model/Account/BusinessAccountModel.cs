@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class BusinessAccountModel : BaseAccountModel
+    public class BusinessAccountModel : AccountBaseModel
     {
         [JsonPropertyName("legalBusinessName")]
         public string LegalBusinessName { get; set; }
