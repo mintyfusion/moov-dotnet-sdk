@@ -20,12 +20,12 @@
 
         Task<T> PostAsync<T>(string endpoint,
             IList<string> scopeList,
-            object postData = null,
+            object data = null,
             IDictionary<string, string> headers = null);
 
         Task<T> PutAsync<T>(string endpoint,
             IList<string> scopeList,
-            object postData = null,
+            object data = null,
             IDictionary<string, string> headers = null);
 
         Task<T> Patch<T>(string endpoint,
