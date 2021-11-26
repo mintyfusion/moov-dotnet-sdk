@@ -96,9 +96,9 @@
         Read
     }
 
-    public enum FedScope
+    public enum InstitutionScope
     {
-        [StrProp("fed.read")]
+        [StrProp("/fed.read")]
         Read
     }
 
@@ -232,6 +232,15 @@
     {
         [StrProp("/institutions/{rail}/search")]
         Search
+    }
+
+    public enum Rail
+    {
+        [StrProp("ach")]
+        Ach,
+
+        [StrProp("wire")]
+        Wire
     }
     #endregion Enum
 }
