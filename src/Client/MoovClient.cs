@@ -8,12 +8,10 @@
     using Model.Token;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using System.Web;
     using Tutkoo.Essentials;
     #endregion namespace
 
@@ -28,8 +26,6 @@
         private readonly string clientSecret = string.Empty;
 
         private readonly string platformID = string.Empty;
-
-        private readonly string idempotencyKey = string.Empty;
         #endregion Fields
 
         #region Properties
@@ -98,6 +94,8 @@
 
                 stringContent = new StringContent(json, Encoding.UTF8, "application/json");
             }
+
+            httpClient.DefaultRequestHeaders.Add(Constant.X_IDEMPOTENCY, Guid.NewGuid().ToString());
 
             AddHeaders(headers);
 
@@ -240,8 +238,6 @@
 
         private void AddHeaders(IDictionary<string, string> headers)
         {
-            httpClient.DefaultRequestHeaders.Add(Constant.X_IDEMPOTENCY, idempotencyKey);
-
             if (headers != null && headers.Count > 0)
             {
                 foreach (KeyValuePair<string, string> keyValuePair in headers)
