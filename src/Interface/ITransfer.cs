@@ -11,13 +11,10 @@
     {
         #region Methods
         Task<TransferResultModel> InitiateAsync(string accountId,
-            string idempotencyKey,
             TransferModel transferModel);
 
         Task<IList<TransferModel>> ListAsync(string accountId,
-            TransferFilterModel transferFilterModel = null,
-            int? count = null,
-            int? skip = null);
+            TransferFilterModel transferFilterModel = null);
 
         Task<TransferModel> GetAsync(string id,
             GetTransferRequestModel requestModel);

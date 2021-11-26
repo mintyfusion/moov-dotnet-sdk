@@ -9,6 +9,8 @@
     public interface IClient
     {
         #region Methods
+        string PlatformID { get; }
+
         Task<T> GetAsync<T>(string endpoint,
             IList<string> scopeList,
             IDictionary<string, string> queryParams = null,

@@ -26,7 +26,18 @@
         private readonly string clientId = string.Empty;
 
         private readonly string clientSecret = string.Empty;
+
+        private readonly string platformID = string.Empty;
+
+        private readonly string idempotencyKey = string.Empty;
         #endregion Fields
+
+        #region Properties
+        public string PlatformID
+        {
+            get => platformID;
+        }
+        #endregion Properties
 
         #region Constructor
         public MoovClient(IConfiguration configuration,
@@ -36,6 +47,7 @@
 
             clientId = configuration[Constant.MOOV_CLIENT_ID];
             clientSecret = configuration[Constant.MOOV_SECRET];
+            platformID = configuration[Constant.MOOV_PLATFORM_ID];
         }
         #endregion Constructor
 
@@ -228,6 +240,8 @@
 
         private void AddHeaders(IDictionary<string, string> headers)
         {
+            httpClient.DefaultRequestHeaders.Add(Constant.X_IDEMPOTENCY, idempotencyKey);
+
             if (headers != null && headers.Count > 0)
             {
                 foreach (KeyValuePair<string, string> keyValuePair in headers)

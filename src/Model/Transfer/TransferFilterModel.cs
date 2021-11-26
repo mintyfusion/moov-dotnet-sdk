@@ -6,7 +6,7 @@
     #endregion
 
     #region Class
-    public class TransferFilterModel
+    public class TransferFilterModel : QueryModel
     {
         [JsonPropertyName("accountIDs")]
         public string AccountIDs { get; set; }

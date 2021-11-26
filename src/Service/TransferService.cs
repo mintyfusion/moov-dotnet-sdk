@@ -2,7 +2,6 @@
 {
     #region Namespace
     using Interface;
-    using Microsoft.Extensions.Configuration;
     using Model.Transfer;
     using System;
     using System.Collections.Generic;
@@ -16,17 +15,12 @@
     {
         #region Fields
         private readonly IClient moovClient = null;
-
-        private readonly string HouseAccountId = string.Empty;
         #endregion Fields
 
         #region Constructor
-        public TransferService(IClient moovClient,
-            IConfiguration configuration)
+        public TransferService(IClient moovClient)
         {
             this.moovClient = moovClient;
-
-            HouseAccountId = configuration[Constant.MOOV_HOUSE_ACCOUNT_ID];
         }
         #endregion Constructor
 
@@ -35,18 +29,13 @@
         /// Initiate tranfer for account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="idempotencyKey"></param>
         /// <param name="transferModel"></param>
         /// <returns>Transfer unique id</returns>
         public async Task<TransferResultModel> InitiateAsync(string accountId,
-            string idempotencyKey,
             TransferModel transferModel)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
-
-            if (string.IsNullOrEmpty(idempotencyKey))
-                throw new ArgumentNullException(nameof(idempotencyKey));
 
             if (transferModel == null)
                 throw new ArgumentNullException(nameof(transferModel));
@@ -58,8 +47,7 @@
 
             TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(endpoint,
                 new List<string>() { scope },
-                transferModel,
-                new Dictionary<string, string>() { { Constant.IDEMPOTENCY, idempotencyKey } });
+                transferModel);
 
             return transferResult;
         }
@@ -69,13 +57,9 @@
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="transferFilterModel"></param>
-        /// <param name="count"></param>
-        /// <param name="skip"></param>
         /// <returns></returns>
         public async Task<IList<TransferModel>> ListAsync(string accountId,
-            TransferFilterModel transferFilterModel = null,
-            int? count = null,
-            int? skip = null)
+            TransferFilterModel transferFilterModel = null)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -90,12 +74,6 @@
             // Convert model to <string, string> keyvalue pair query dictionary
             if (transferFilterModel != null)
                 queryParams = transferFilterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
-            if (count.HasValue)
-                queryParams[Constant.COUNT] = count.ToString();
-
-            if (skip.HasValue)
-                queryParams[Constant.SKIP] = skip.ToString();
 
             IList<TransferModel> tranferList = await moovClient.GetAsync<IList<TransferModel>>(endpoint,
                 new List<string>() { scope },
@@ -133,7 +111,7 @@
             TransferModel transfer = await moovClient.GetAsync<TransferModel>(endpoint,
                 new List<string>() { scope },
                 queryParams,
-                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, HouseAccountId } });
+                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, moovClient.PlatformID } });
 
             return transfer;
         }

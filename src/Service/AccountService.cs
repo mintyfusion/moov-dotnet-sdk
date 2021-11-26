@@ -51,13 +51,9 @@
         /// </summary>
         /// <param name="accountId">Moov account id</param>
         /// <param name="filterModel"></param>
-        /// <param name="count"></param>
-        /// <param name="skip"></param>
         /// <returns>List of account</returns>
         public async Task<IList<AccountModel>> ListAsync(string accountId,
-            AccountFilterModel filterModel = null,
-            int? count = null,
-            int? skip = null)
+            AccountFilterModel filterModel = null)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentException(nameof(accountId));
@@ -67,12 +63,6 @@
             // Convert model to <string, string> keyvalue pair query dictionary
             if (filterModel != null)
                 queryParams = filterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
-            if (count.HasValue)
-                queryParams[Constant.COUNT] = count.ToString();
-
-            if (skip.HasValue)
-                queryParams[Constant.SKIP] = skip.ToString();
 
             string scope = Utility.Format(AccountScope.Read.Value());
 

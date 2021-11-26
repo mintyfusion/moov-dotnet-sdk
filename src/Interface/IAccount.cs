@@ -13,9 +13,7 @@
         Task<AccountModel> CreateAsync(CreateAccountRequestModel requestModel);
 
         Task<IList<AccountModel>> ListAsync(string accountId,
-            AccountFilterModel filterModel = null,
-            int? count = null,
-            int? skip = null);
+            AccountFilterModel filterModel = null);
 
         Task<AccountModel> GetAsync(string accountId);
 
