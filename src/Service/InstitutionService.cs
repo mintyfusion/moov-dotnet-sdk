@@ -44,8 +44,8 @@
             IDictionary<string, string> queryParams = new Dictionary<string, string>();
 
             // Convert model to <string, string> keyvalue pair query dictionary
-            if (requestModel != null)   
-                    queryParams = requestModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
+            if (requestModel != null)
+                queryParams = requestModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
 
             InstitutionSearchResultModel resutl = await moovClient.GetAsync<InstitutionSearchResultModel>(endpoint,
                 new List<string>() { scope },
