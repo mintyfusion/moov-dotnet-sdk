@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class QueryModel
+    public class QueryBaseModel
     {
         [JsonPropertyName("skip")]
         public int Skip { get; set; }

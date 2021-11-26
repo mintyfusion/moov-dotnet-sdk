@@ -10,18 +10,18 @@
     public interface IAccount
     {
         #region Methods
-        Task<AccountModel> CreateAsync(CreateAccountRequestModel requestModel);
+        Task<AccountModel> CreateAsync(CreateUpdateAccountRequestModel createAccount);
 
         Task<IList<AccountModel>> ListAsync(string accountId,
-            AccountFilterModel filterModel = null);
+            AccountQueryModel accountQuery = null);
 
         Task<AccountModel> GetAsync(string accountId);
 
         Task<AccountModel> UpdateAsync(string accountId,
-            CreateAccountRequestModel updateRequestModel);
+            CreateUpdateAccountRequestModel updateAccount);
 
         Task<AccountModel> PatchAsync(string accountId,
-            AccountRequestModel requestModel);
+            AccountRequestModel account);
         #endregion Methods
     }
     #endregion Interface

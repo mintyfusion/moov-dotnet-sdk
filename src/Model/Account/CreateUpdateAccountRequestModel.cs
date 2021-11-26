@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class CreateAccountRequestModel : AccountRequestModel
+    public class CreateUpdateAccountRequestModel : AccountRequestModel
     {
         [JsonPropertyName("accountType")]
         public string AccountType { get; set; }

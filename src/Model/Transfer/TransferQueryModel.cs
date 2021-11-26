@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class TransferFilterModel : QueryModel
+    public class TransferQueryModel : QueryBaseModel
     {
         [JsonPropertyName("accountIDs")]
         public string AccountIDs { get; set; }

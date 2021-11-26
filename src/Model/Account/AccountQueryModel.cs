@@ -6,7 +6,7 @@
     #endregion
 
     #region Class
-    public class AccountFilterModel : QueryModel
+    public class AccountQueryModel : QueryBaseModel
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }

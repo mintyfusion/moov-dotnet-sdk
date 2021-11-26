@@ -11,16 +11,16 @@
     {
         #region Methods
         Task<TransferResultModel> InitiateAsync(string accountId,
-            TransferModel transferModel);
+            TransferModel transfer);
 
         Task<IList<TransferModel>> ListAsync(string accountId,
-            TransferFilterModel transferFilterModel = null);
+            TransferQueryModel transferQuery = null);
 
         Task<TransferModel> GetAsync(string id,
-            GetTransferRequestModel requestModel);
+            GetTransferRequestModel transferRequest);
 
         Task<TransferOptionsResponseModel> GetTransferOptionsAsync(string accountId,
-            TransferOptionsRequestModel transferOptionsRequestModel);
+            TransferOptionsRequestModel transferOptionsRequest);
         #endregion Methods
     }
     #endregion Interface
