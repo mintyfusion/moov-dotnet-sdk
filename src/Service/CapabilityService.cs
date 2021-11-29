@@ -46,8 +46,7 @@
                 accountId);
 
             IList<CapabilityModel> capabilities = await moovClient.PostAsync<IList<CapabilityModel>>(endpoint,
-                new List<string>() { scope },
-                capabilityList);
+                new List<string>() { scope }, capabilityList);
 
             return capabilities;
         }
@@ -93,10 +92,10 @@
                 accountId,
                 capability.Value());
 
-            CapabilityModel capabilityModel = await moovClient.GetAsync<CapabilityModel>(endpoint,
+            CapabilityModel capabilityResult = await moovClient.GetAsync<CapabilityModel>(endpoint,
                 new List<string>() { scope });
 
-            return capabilityModel;
+            return capabilityResult;
         }
 
         /// <summary>
