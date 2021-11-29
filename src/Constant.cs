@@ -10,13 +10,11 @@
 
         public const string MOOV_SECRET = "Moov:ClientSecret";
 
-        public const string IDEMPOTENCY = "X-Idempotency-Key";
+        public const string MOOV_PLATFORM_ID = "Moov:PlatformID";
 
-        public const string X_ACCOUNTID = "X-Account-ID";
+        public const string IDEMPOTENCY_KEY = "X-Idempotency-Key";
 
-        public const string ACCOUNTID = "accountId";
-
-        public const string TRANSFERID = "transferID";
+        public const string X_ACCOUNT_ID = "X-Account-ID";
         #endregion Fields
     }
     #endregion Class

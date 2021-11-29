@@ -20,8 +20,14 @@
 
     public enum AccountScope
     {
+        [StrProp("/accounts/{0}/profile.read")]
+        Read,
+
         [StrProp("accounts.write")]
-        Write
+        Write,
+
+        [StrProp("/accounts/{0}/profile.write")]
+        Update,
     }
 
     public enum BankAccountScope
