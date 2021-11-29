@@ -29,10 +29,10 @@
         /// Get payment methods supported by an account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="queryModel">Optional parameter containing sourceId</param>
+        /// <param name="paymentMethodQuery">Optional parameter containing sourceId</param>
         /// <returns>List of supported PaymentMethodModel</returns>
         public async Task<IList<PaymentMethodModel>> ListAsync(string accountId,
-            PaymentMethodQueryModel queryModel = null)
+            PaymentMethodQueryModel paymentMethodQuery = null)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -42,15 +42,8 @@
 
             string endpoint = Utility.Format(PaymentMethodEndpoint.List.Value(), accountId);
 
-            IDictionary<string, string> queryParams = new Dictionary<string, string>();
-
-            // Convert model to <string, string> keyvalue pair query dictionary
-            if (queryModel != null)
-                queryParams = queryModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
             IList<PaymentMethodModel> paymentMethods = await moovClient.GetAsync<IList<PaymentMethodModel>>(endpoint,
-                new List<string>() { scope },
-                queryParams);
+                new List<string>() { scope }, paymentMethodQuery);
 
             return paymentMethods;
         }
