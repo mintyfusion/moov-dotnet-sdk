@@ -5,7 +5,6 @@
     using Model.Representative;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -29,16 +28,16 @@
         /// Create Representative for an account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="representative"></param>
+        /// <param name="createRepresentative"></param>
         /// <returns>RepresentativeModel</returns>
         public async Task<RepresentativeModel> CreateAsync(string accountId,
-            RepresentativeRequestModel representative)
+            CreateUpdateRepresentativeRequestModel createRepresentative)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (representative == null)
-                throw new ArgumentNullException(nameof(representative));
+            if (createRepresentative == null)
+                throw new ArgumentNullException(nameof(createRepresentative));
 
             string scope = Utility.Format(RepresentativeScope.Write.Value(),
                 accountId);
@@ -47,8 +46,7 @@
                 accountId);
 
             RepresentativeModel result = await moovClient.PostAsync<RepresentativeModel>(endpoint,
-                new List<string>() { scope },
-                representative);
+                new List<string>() { scope }, createRepresentative);
 
             return result;
         }
@@ -135,11 +133,11 @@
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="representativeID"></param>
-        /// <param name="representative"></param>
+        /// <param name="updateRepresentative"></param>
         /// <returns></returns>
         public async Task<RepresentativeModel> UpdateAsync(string accountId,
             string representativeID,
-            RepresentativeRequestModel representative)
+            CreateUpdateRepresentativeRequestModel updateRepresentative)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -147,8 +145,8 @@
             if (string.IsNullOrEmpty(representativeID))
                 throw new ArgumentNullException(nameof(representativeID));
 
-            if (representative == null)
-                throw new ArgumentNullException(nameof(representative));
+            if (updateRepresentative == null)
+                throw new ArgumentNullException(nameof(updateRepresentative));
 
             string scope = Utility.Format(RepresentativeScope.Write.Value(),
                 accountId);
@@ -157,11 +155,10 @@
                 accountId,
                 representativeID);
 
-            RepresentativeModel result = await moovClient.PutAsync<RepresentativeModel>(endpoint,
-                new List<string>() { scope },
-                representative);
+            RepresentativeModel representative = await moovClient.PutAsync<RepresentativeModel>(endpoint,
+                new List<string>() { scope }, updateRepresentative);
 
-            return result;
+            return representative;
         }
         #endregion Public Methods
     }

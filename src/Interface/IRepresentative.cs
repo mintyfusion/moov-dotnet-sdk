@@ -11,7 +11,7 @@
     {
         #region Methods
         Task<RepresentativeModel> CreateAsync(string accountId,
-            RepresentativeRequestModel representative);
+            CreateUpdateRepresentativeRequestModel createRepresentative);
 
         Task<IList<RepresentativeModel>> ListAsync(string accountId);
 
@@ -23,7 +23,7 @@
 
         Task<RepresentativeModel> UpdateAsync(string accountId,
             string representativeID,
-            RepresentativeRequestModel representative);
+            CreateUpdateRepresentativeRequestModel updateRepresentative);
         #endregion Methods
     }
     #endregion Interface

@@ -2,16 +2,12 @@
 {
     #region Namespace
     using Account;
-    using System;
     using System.Text.Json.Serialization;
     #endregion
 
     #region Class
-    public class RepresentativeModel
+    public class CreateUpdateRepresentativeRequestModel
     {
-        [JsonPropertyName("representativeID")]
-        public string Id { get; set; }
-
         [JsonPropertyName("name")]
         public NameModel Name { get; set; }
 
@@ -24,23 +20,14 @@
         [JsonPropertyName("address")]
         public AddressModel Address { get; set; }
 
-        [JsonPropertyName("birthDateProvided")]
-        public bool BirthDateProvided { get; set; }
+        [JsonPropertyName("birthDate")]
+        public DateModel BirthDate { get; set; }
 
-        [JsonPropertyName("governmentIDProvided")]
-        public bool GovernmentIDProvided { get; set; }
+        [JsonPropertyName("governmentID")]
+        public GovernmentIdModel GovernmentIdModel { get; set; }
 
         [JsonPropertyName("responsibilities")]
         public ResponsibilitiesModel Responsibilities { get; set; }
-
-        [JsonPropertyName("createdOn")]
-        public DateTime CreatedOn { get; set; }
-
-        [JsonPropertyName("updatedOn")]
-        public DateTime UpdatedOn { get; set; }
-
-        [JsonPropertyName("disabledOn")]
-        public DateTime DisabledOn { get; set; }
     }
     #endregion Class
 }
