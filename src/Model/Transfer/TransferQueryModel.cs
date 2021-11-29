@@ -1,12 +1,11 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Transfer
 {
     #region Namespace
-    using System.Collections.Generic;
     using System.Text.Json.Serialization;
     #endregion
 
     #region Class
-    public class TransferFilterModel
+    public class TransferQueryModel : QueryBaseModel
     {
         [JsonPropertyName("accountIDs")]
         public string AccountIDs { get; set; }
