@@ -1,6 +1,7 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Transfer
 {
     #region Namespace
+    using System;
     using System.Text.Json.Serialization;
     #endregion
 
@@ -11,7 +12,7 @@
         public string Id { get; set; }
 
         [JsonPropertyName("createdAt")]
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; }

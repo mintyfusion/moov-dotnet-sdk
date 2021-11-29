@@ -5,7 +5,6 @@
     using Model.Transfer;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -29,47 +28,36 @@
         /// Initiate tranfer for account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="key"></param>
-        /// <param name="transferModel"></param>
+        /// <param name="transfer"></param>
         /// <returns>Transfer unique id</returns>
-        public async Task<string> InitiateAsync(string accountId,
-            string key,
-            TransferModel transferModel)
+        public async Task<TransferResultModel> InitiateAsync(string accountId,
+            TransferModel transfer)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (string.IsNullOrEmpty(key))
-                throw new ArgumentNullException(nameof(key));
-
-            if (transferModel == null)
-                throw new ArgumentNullException(nameof(transferModel));
+            if (transfer == null)
+                throw new ArgumentNullException(nameof(transfer));
 
             string scope = Utility.Format(TransferScope.Write.Value(),
                 accountId);
 
             string endpoint = Utility.Format(TransferEndpoint.Create.Value(), accountId);
 
-            IDictionary<string, string> transferDetails = await moovClient.PostAsync<IDictionary<string, string>>(endpoint,
-                new List<string>() { scope },
-                transferModel,
-                new Dictionary<string, string>() { { Constant.IDEMPOTENCY, key } });
+            TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(endpoint,
+                new List<string>() { scope }, transfer);
 
-            return transferDetails[Constant.TRANSFERID];
+            return transferResult;
         }
 
         /// <summary>
         /// Get all transfers for single account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="transferFilterModel"></param>
-        /// <param name="count"></param>
-        /// <param name="skip"></param>
+        /// <param name="transferQuery"></param>
         /// <returns></returns>
         public async Task<IList<TransferModel>> ListAsync(string accountId,
-            TransferFilterModel transferFilterModel = null,
-            int? count = null,
-            int? skip = null)
+            TransferQueryModel transferQuery = null)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -79,49 +67,35 @@
 
             string endpoint = Utility.Format(TransferEndpoint.List.Value());
 
-            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            IList<TransferModel> list = await moovClient.GetAsync<IList<TransferModel>>(endpoint,
+                new List<string>() { scope }, transferQuery);
 
-            // Convert model to <string, string> keyvalue pair query dictionary
-            if (transferFilterModel != null)   
-                    queryParams = transferFilterModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
-            if (count.HasValue)
-                queryParams["count"] = count.ToString();
-
-            if (skip.HasValue)
-                queryParams["skip"] = skip.ToString();
-
-            IList<TransferModel> tranferList = await moovClient.GetAsync<IList<TransferModel>>(endpoint,
-                new List<string>() { scope },
-                queryParams);
-
-            return tranferList;
+            return list;
         }
 
         /// <summary>
-        /// Get singel transfer by id
+        /// Get single transfer by id
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="transferId"></param>
+        /// <param name="id"></param>
+        /// <param name="transferRequest"></param>
         /// <returns>TransferModel</returns>
-        public async Task<TransferModel> GetAsync(string accountId,
-            string transferId)
+        public async Task<TransferModel> GetAsync(string id,
+            GetTransferRequestModel transferRequest)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
 
-            if (string.IsNullOrEmpty(transferId))
-                throw new ArgumentNullException(nameof(transferId));
+            if (transferRequest == null)
+                throw new ArgumentNullException(nameof(transferRequest));
 
             string scope = Utility.Format(TransferScope.Read.Value(),
-                accountId);
+                transferRequest.AccountId);
 
-            string endpoint = Utility.Format(TransferEndpoint.Get.Value(), transferId);
+            string endpoint = Utility.Format(TransferEndpoint.Get.Value(), id);
 
             TransferModel transfer = await moovClient.GetAsync<TransferModel>(endpoint,
-                new List<string>() { scope },
-                new Dictionary<string, string> { { Constant.ACCOUNTID, accountId } },
-                new Dictionary<string, string>() { { Constant.X_ACCOUNTID, accountId } });
+                new List<string>() { scope }, transferRequest,
+                new Dictionary<string, string>() { { Constant.X_ACCOUNT_ID, moovClient.PlatformID } });
 
             return transfer;
         }
@@ -130,16 +104,16 @@
         /// Get available transfer options for account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="transferOptionsRequestModel"></param>
+        /// <param name="transferOptionsRequest"></param>
         /// <returns></returns>
         public async Task<TransferOptionsResponseModel> GetTransferOptionsAsync(string accountId,
-            TransferOptionsRequestModel transferOptionsRequestModel)
+            TransferOptionsRequestModel transferOptionsRequest)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (transferOptionsRequestModel == null)
-                throw new ArgumentNullException(nameof(transferOptionsRequestModel));
+            if (transferOptionsRequest == null)
+                throw new ArgumentNullException(nameof(transferOptionsRequest));
 
             string scope = Utility.Format(TransferScope.Read.Value(),
                 accountId);
@@ -147,8 +121,7 @@
             string endpoint = TransferEndpoint.GetTransferOptions.Value();
 
             TransferOptionsResponseModel transferOptionsResponse = await moovClient.PostAsync<TransferOptionsResponseModel>(endpoint,
-                new List<string>() { scope },
-                transferOptionsRequestModel);
+                new List<string>() { scope }, transferOptionsRequest);
 
             return transferOptionsResponse;
         }
