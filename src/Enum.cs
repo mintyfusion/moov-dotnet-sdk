@@ -39,6 +39,14 @@
         Write
     }
 
+    //TODO: Not yet done in api documentation
+    public enum CardScope
+    {
+        Read,
+
+        Write
+    }
+
     public enum CapabilitiesScope
     {
         [StrProp("/accounts/{0}/capabilities.read")]
@@ -181,6 +189,22 @@
 
         [StrProp("/accounts/{0}/bank-accounts/{1}/micro-deposits")]
         CompleteMicroDepositeVerification
+    }
+
+    public enum CardEndpoint
+    {
+        //TODO: Endpoint is different then others, review this api
+        [StrProp("https://cards.moov-staging.io/accounts/{0}/cards")]
+        Create,
+
+        [StrProp("/accounts/{0}/cards")]
+        List,
+
+        [StrProp("/accounts/{0}/cards/{1}")]
+        Get,
+
+        [StrProp("/accounts/{0}/cards/{1}")]
+        Disable,
     }
 
     public enum PaymentMethodEndpoint
