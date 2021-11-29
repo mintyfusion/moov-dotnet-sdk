@@ -5,7 +5,7 @@
     {
         #region Public Static Methods
         public static string Format(string formatString,
-            params string?[] param)
+            params string[] param)
         {
             return string.Format(formatString, param);
         }
