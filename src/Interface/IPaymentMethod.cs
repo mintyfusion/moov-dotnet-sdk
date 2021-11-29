@@ -11,7 +11,7 @@
     {
         #region Methods
         Task<IList<PaymentMethodModel>> ListAsync(string accountId,
-            PaymentMethodQueryModel queryModel = null);
+            PaymentMethodQueryModel paymentMethodQuery = null);
 
         Task<PaymentMethodModel> GetAsync(string accountId,
             string paymentMethodID);
