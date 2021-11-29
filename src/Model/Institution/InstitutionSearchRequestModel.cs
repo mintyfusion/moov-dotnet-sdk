@@ -5,8 +5,7 @@
     #endregion
 
     #region Class
-    //TODO: Add base query model with skip and count from other PR merge
-    public class InstitutionSearchRequestModel
+    public class InstitutionSearchRequestModel : QueryBaseModel
     {
         [JsonPropertyName("source")]
         public string Name { get; set; }

@@ -5,7 +5,6 @@
     using Model.Institution;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -29,29 +28,22 @@
         /// Search institution by Rail
         /// </summary>
         /// <param name="rail"></param>
-        /// <param name="requestModel"></param>
+        /// <param name="institutionSearch"></param>
         /// <returns>InstitutionSearchResultModel</returns>
         public async Task<InstitutionSearchResultModel> SearchAsync(Rail rail,
-             InstitutionSearchRequestModel requestModel)
+             InstitutionSearchRequestModel institutionSearch)
         {
-            if (requestModel == null)
-                throw new ArgumentNullException(nameof(requestModel));
+            if (institutionSearch == null)
+                throw new ArgumentNullException(nameof(institutionSearch));
 
             string scope = Utility.Format(InstitutionScope.Read.Value());
 
             string endpoint = Utility.Format(InstitutionEndpoint.Search.Value());
 
-            IDictionary<string, string> queryParams = new Dictionary<string, string>();
+            InstitutionSearchResultModel institutionSearchResult = await moovClient.GetAsync<InstitutionSearchResultModel>(endpoint,
+                new List<string>() { scope }, institutionSearch);
 
-            // Convert model to <string, string> keyvalue pair query dictionary
-            if (requestModel != null)
-                queryParams = requestModel.AsDictionary().ToDictionary(k => k.Key, k => (string)k.Value);
-
-            InstitutionSearchResultModel resutl = await moovClient.GetAsync<InstitutionSearchResultModel>(endpoint,
-                new List<string>() { scope },
-                queryParams);
-
-            return resutl;
+            return institutionSearchResult;
         }
         #endregion Public Methods
     }

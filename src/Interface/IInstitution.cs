@@ -11,7 +11,7 @@
     {
         #region Methods
         Task<InstitutionSearchResultModel> SearchAsync(Rail rail,
-              InstitutionSearchRequestModel requestModel);
+             InstitutionSearchRequestModel institutionSearch);
         #endregion Methods
     }
     #endregion Interface
