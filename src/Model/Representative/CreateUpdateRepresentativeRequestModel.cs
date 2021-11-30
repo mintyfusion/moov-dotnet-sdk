@@ -24,7 +24,7 @@
         public DateModel BirthDate { get; set; }
 
         [JsonPropertyName("governmentID")]
-        public GovernmentIdModel GovernmentIdModel { get; set; }
+        public GovernmentIdModel GovernmentID { get; set; }
 
         [JsonPropertyName("responsibilities")]
         public ResponsibilitiesModel Responsibilities { get; set; }
