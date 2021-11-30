@@ -9,10 +9,10 @@
     public class InstitutionSearchResultModel
     {
         [JsonPropertyName("achParticipants")]
-        public IList<AchParticipant> AchParticipantList { get; set; }
+        public IList<ACHParticipant> ACHParticipants { get; set; }
 
         [JsonPropertyName("wireParticipants")]
-        public IList<WireParticipant> WireParticipantList { get; set; }
+        public IList<WireParticipant> WireParticipants { get; set; }
     }
     #endregion Class
 }

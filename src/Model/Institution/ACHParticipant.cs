@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class AchParticipant
+    public class ACHParticipant
     {
         [JsonPropertyName("routingNumber")]
         public string RoutingNumber { get; set; }
