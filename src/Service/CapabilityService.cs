@@ -28,16 +28,16 @@
         /// Request multiple capability for an account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="capabilityList"> Use Capability enum to create list of capabilities </param>
+        /// <param name="capabilities"> Use Capability enum to create list of capabilities </param>
         /// <returns>List of requested capabilites</returns>
         public async Task<IList<CapabilityModel>> RequestAsync(string accountId,
-            IList<string> capabilityList)
+            IList<string> capabilities)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (capabilityList == null || capabilityList.Count == 0)
-                throw new ArgumentNullException(nameof(capabilityList));
+            if (capabilities == null || capabilities.Count == 0)
+                throw new ArgumentNullException(nameof(capabilities));
 
             string scope = Utility.Format(CapabilitiesScope.Write.Value(),
                 accountId);
@@ -45,10 +45,10 @@
             string endpoint = Utility.Format(CapabilityEndpoint.Request.Value(),
                 accountId);
 
-            IList<CapabilityModel> capabilities = await moovClient.PostAsync<IList<CapabilityModel>>(endpoint,
-                new List<string>() { scope }, capabilityList);
+            IList<CapabilityModel> requestedCapabilities = await moovClient.PostAsync<IList<CapabilityModel>>(endpoint,
+                new List<string>() { scope }, capabilities);
 
-            return capabilities;
+            return requestedCapabilities;
         }
 
         /// <summary>

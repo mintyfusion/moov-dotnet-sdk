@@ -11,7 +11,7 @@
     {
         #region Methods
         Task<IList<CapabilityModel>> RequestAsync(string accountId,
-            IList<string> capabilityList);
+            IList<string> capabilities);
 
         Task<IList<CapabilityModel>> ListAsync(string accountId);
 
