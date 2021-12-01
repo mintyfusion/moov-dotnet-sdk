@@ -102,9 +102,9 @@
         Read
     }
 
-    public enum FedScope
+    public enum InstitutionScope
     {
-        [StrProp("fed.read")]
+        [StrProp("/fed.read")]
         Read
     }
 
@@ -240,6 +240,15 @@
         Search
     }
 
+   public enum Rail
+   {
+       [StrProp("ach")]
+       Ach,
+
+       [StrProp("wire")]
+       Wire
+    }
+    
     public enum Capability
     {
         [StrProp("transfers")]
