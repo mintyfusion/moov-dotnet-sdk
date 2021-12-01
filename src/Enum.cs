@@ -156,7 +156,7 @@
         Disable,
 
         [StrProp("/accounts/{0}/capabilities")]
-        Get,
+        List,
 
         [StrProp("/accounts/{0}/capabilities")]
         Request
@@ -221,7 +221,7 @@
         [StrProp("/accounts/{0}/representatives/{1}")]
         Disable,
 
-        [StrProp("/accounts/{0}/representatives")]
+        [StrProp("/accounts/{0}/representatives/{1}")]
         Update
     }
 
@@ -240,13 +240,34 @@
         Search
     }
 
-    public enum Rail
-    {
-        [StrProp("ach")]
-        Ach,
+   public enum Rail
+   {
+       [StrProp("ach")]
+       Ach,
 
-        [StrProp("wire")]
-        Wire
+       [StrProp("wire")]
+       Wire
+    }
+    
+    public enum Capability
+    {
+        [StrProp("transfers")]
+        Transfers,
+
+        [StrProp("send-funds")]
+        SendFunds,
+
+        [StrProp("collect-funds")]
+        CollectFunds,
+
+        [StrProp("wallet")]
+        Wallet,
+
+        [StrProp("receive-1099-nec")]
+        Receive1099nec,
+
+        [StrProp("receive-1099-k")]
+        Receive1099K
     }
     #endregion Enum
 }
