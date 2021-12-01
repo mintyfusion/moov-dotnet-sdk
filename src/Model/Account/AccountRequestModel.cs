@@ -1,9 +1,9 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Account
 {
-    #region Namespace
+    #region namespace
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class AccountRequestModel

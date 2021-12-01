@@ -18,6 +18,15 @@
         RefreshToken
     }
 
+    public enum AccountType 
+    {
+        [StrProp("individual")]
+        Individual,
+
+        [StrProp("business")]
+        Business
+    }
+
     public enum AccountScope
     {
         [StrProp("/accounts/{0}/profile.read")]

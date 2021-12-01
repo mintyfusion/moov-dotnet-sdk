@@ -10,14 +10,11 @@
     public interface ITransfer
     {
         #region Methods
-        Task<TransferResultModel> InitiateAsync(string accountId,
-            TransferModel transfer);
+        Task<TransferResultModel> InitiateAsync(TransferModel transfer);
 
-        Task<IList<TransferModel>> ListAsync(string accountId,
-            TransferQueryModel transferQuery = null);
+        Task<IList<TransferModel>> ListAsync(TransferQueryModel transferQuery = null);
 
-        Task<TransferModel> GetAsync(string id,
-            GetTransferRequestModel transferRequest);
+        Task<TransferModel> GetAsync(string transferID);
 
         Task<TransferOptionsResponseModel> GetTransferOptionsAsync(string accountId,
             TransferOptionsRequestModel transferOptionsRequest);

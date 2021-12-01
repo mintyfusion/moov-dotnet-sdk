@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Transfer;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class TransferService : ITransfer
@@ -27,24 +27,18 @@
         /// <summary>
         /// Initiate tranfer for account
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="platformAccountID"></param>
         /// <param name="transfer"></param>
         /// <returns>Transfer unique id</returns>
-        public async Task<TransferResultModel> InitiateAsync(string accountId,
-            TransferModel transfer)
+        public async Task<TransferResultModel> InitiateAsync(TransferModel transfer)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
-
             if (transfer == null)
                 throw new ArgumentNullException(nameof(transfer));
 
             string scope = Utility.Format(TransferScope.Write.Value(),
-                accountId);
+                moovClient.PlatformID);
 
-            string endpoint = Utility.Format(TransferEndpoint.Create.Value(), accountId);
-
-            TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(endpoint,
+            TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(TransferEndpoint.Create.Value(),
                 new List<string>() { scope }, transfer);
 
             return transferResult;
@@ -56,18 +50,12 @@
         /// <param name="accountId"></param>
         /// <param name="transferQuery"></param>
         /// <returns></returns>
-        public async Task<IList<TransferModel>> ListAsync(string accountId,
-            TransferQueryModel transferQuery = null)
+        public async Task<IList<TransferModel>> ListAsync(TransferQueryModel transferQuery = null)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
-
             string scope = Utility.Format(TransferScope.Read.Value(),
-                accountId);
+                moovClient.PlatformID);
 
-            string endpoint = Utility.Format(TransferEndpoint.List.Value());
-
-            IList<TransferModel> list = await moovClient.GetAsync<IList<TransferModel>>(endpoint,
+            IList<TransferModel> list = await moovClient.GetAsync<IList<TransferModel>>(TransferEndpoint.List.Value(),
                 new List<string>() { scope }, transferQuery);
 
             return list;
@@ -76,25 +64,20 @@
         /// <summary>
         /// Get single transfer by id
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="transferRequest"></param>
+        /// <param name="transferId"></param>
         /// <returns>TransferModel</returns>
-        public async Task<TransferModel> GetAsync(string id,
-            GetTransferRequestModel transferRequest)
+        public async Task<TransferModel> GetAsync(string transferID)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(nameof(id));
-
-            if (transferRequest == null)
-                throw new ArgumentNullException(nameof(transferRequest));
+            if (string.IsNullOrEmpty(transferID))
+                throw new ArgumentNullException(nameof(transferID));
 
             string scope = Utility.Format(TransferScope.Read.Value(),
-                transferRequest.AccountId);
+                moovClient.PlatformID);
 
-            string endpoint = Utility.Format(TransferEndpoint.Get.Value(), id);
+            string endpoint = Utility.Format(TransferEndpoint.Get.Value(), transferID);
 
             TransferModel transfer = await moovClient.GetAsync<TransferModel>(endpoint,
-                new List<string>() { scope }, transferRequest,
+                new List<string>() { scope }, null,
                 new Dictionary<string, string>() { { Constant.X_ACCOUNT_ID, moovClient.PlatformID } });
 
             return transfer;

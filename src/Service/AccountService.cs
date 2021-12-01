@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Account;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class AccountService : IAccount

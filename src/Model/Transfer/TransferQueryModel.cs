@@ -1,12 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Transfer
 {
-    #region Namespace
+    #region namespace
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class TransferQueryModel : QueryBaseModel
     {
+        /// <summary>Comma separated list if looking to retrieve transactions for specific connected accounts.</summary>
         [JsonPropertyName("accountIDs")]
         public string AccountIDs { get; set; }
 
