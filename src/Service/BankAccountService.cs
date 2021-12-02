@@ -27,19 +27,20 @@
         /// <summary>
         /// Returns list of bank account(s) associated with account Id.
         /// </summary>
-        /// <param name="accountId">Id of the Account.</param>
+        /// <param name="accountID">Id of the Account.</param>
         /// <returns>List of BankAccounts</returns>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
-        public async Task<IList<BankAccountModel>> ListAsync(string accountId)
+        public async Task<IList<BankAccountModel>> ListAsync(string accountID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
             string scope = Utility.Format(BankAccountScope.Read.Value(),
-                accountId);
+                accountID);
 
-            string endpoint = Utility.Format(BankAccountEndpoint.List.Value(), accountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.List.Value(),
+                accountID);
 
             IList<BankAccountModel> bankAccountList = await moovClient.GetAsync<IList<BankAccountModel>>(endpoint,
                 new List<string>() { scope });
@@ -50,26 +51,25 @@
         /// <summary>
         /// Returns single bank account associated with bank account Id.
         /// </summary>
-        /// <param name="accountId">Id of the Account.</param>
-        /// <param name="bankAccountId">Id of the Bank acocunt.</param>
+        /// <param name="accountID">Id of the Account.</param>
+        /// <param name="bankAccountID">Id of the Bank acocunt.</param>
         /// <returns>Single bank account</returns>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
-        public async Task<BankAccountModel> GetAsync(string accountId,
-            string bankAccountId)
+        public async Task<BankAccountModel> GetAsync(string accountID,
+            string bankAccountID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(bankAccountId))
-                throw new ArgumentNullException(nameof(bankAccountId));
+            if (string.IsNullOrEmpty(bankAccountID))
+                throw new ArgumentNullException(nameof(bankAccountID));
 
             string scope = Utility.Format(BankAccountScope.Read.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(BankAccountEndpoint.Get.Value(),
-                accountId,
-                bankAccountId);
+                accountID, bankAccountID);
 
             BankAccountModel bankAccount = await moovClient.GetAsync<BankAccountModel>(endpoint,
                 new List<string>() { scope });
@@ -80,24 +80,25 @@
         /// <summary>
         /// Disable bank account associated with bank account Id.
         /// </summary>
-        /// <param name="accountId">Id of the Account.</param>
-        /// <param name="bankAccountId">Id of the Bank acocunt.</param>
+        /// <param name="accountID">Id of the Account.</param>
+        /// <param name="bankAccountID">Id of the Bank acocunt.</param>
         /// <returns>true if disables</returns>
         /// <exception cref="MoovTokenException">Throws MoovTokenException when unable to get the Token.</exception>
         /// <exception cref="MoovSdkException">Throws MoovSdkException when unable to get Success from the API.</exception>
-        public async Task<bool> DisableAsync(string accountId,
-            string bankAccountId)
+        public async Task<bool> DisableAsync(string accountID,
+            string bankAccountID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(bankAccountId))
-                throw new ArgumentNullException(nameof(bankAccountId));
+            if (string.IsNullOrEmpty(bankAccountID))
+                throw new ArgumentNullException(nameof(bankAccountID));
 
             string scope = Utility.Format(BankAccountScope.Write.Value(),
-               accountId);
+               accountID);
 
-            string endpoint = Utility.Format(BankAccountEndpoint.Disable.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Disable.Value(),
+                accountID, bankAccountID);
 
             bool success = await moovClient.DeleteAsync<bool>(endpoint,
                 new List<string>() { scope });
@@ -108,26 +109,26 @@
         /// <summary>
         /// Add bank account with necessary details inside an account with id
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountID"></param>
         /// <param name="bankAccount"></param>
         /// <returns>BankAccountModel with id</returns>
-        public async Task<BankAccountModel> CreateAsync(string accountId,
-            BankAccountModel bankAccount)
+        public async Task<BankAccountModel> CreateAsync(string accountID,
+            CreateBankAccountModel createBankAccount)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (bankAccount == null)
-                throw new ArgumentNullException(nameof(bankAccount));
+            if (createBankAccount == null)
+                throw new ArgumentNullException(nameof(createBankAccount));
 
             string scope = Utility.Format(BankAccountScope.Write.Value(),
-                accountId);
+                accountID);
 
-            string endpoint = Utility.Format(BankAccountEndpoint.Create.Value(), accountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Create.Value(),
+                accountID);
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
-                new List<string>() { scope },
-                bankAccount);
+                new List<string>() { scope }, createBankAccount);
 
             return result;
         }
@@ -135,81 +136,79 @@
         /// <summary>
         /// Add bank account with plaid token details
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="token"></param>
+        /// <param name="accountID"></param>
+        /// <param name="token">Can be token in case of Plaid Processor or Public token in case of Plaid Link</param>
         /// <param name="usePlaidLink">True if add plaid with link, false if add plaid with token</param>
         /// <returns>Bankaccount</returns>
-        public async Task<BankAccountModel> CreateAsync(string accountId,
+        public async Task<BankAccountModel> CreateAsync(string accountID,
             string token,
             bool usePlaidLink = false)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
 
             string scope = Utility.Format(BankAccountScope.Write.Value(),
-                accountId);
+                accountID);
 
-            string endpoint = Utility.Format(BankAccountEndpoint.Create.Value(), accountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.Create.Value(), accountID);
 
             IDictionary<string, object> postData = new Dictionary<string, object>();
 
             if (usePlaidLink)
-            {
                 postData.Add("plaidLink", new Dictionary<string, string>() { { "publicToken", token } });
-            }
             else
-            {
                 postData.Add("plaid", new Dictionary<string, string>() { { "token", token } });
-            }
 
             BankAccountModel result = await moovClient.PostAsync<BankAccountModel>(endpoint,
-                new List<string>() { scope },
-                postData);
+                new List<string>() { scope }, postData);
 
             return result;
         }
 
-        public async Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
-           string bankAccountId)
+        public async Task InitiateMicroDepositVerificationAsync(string accountID,
+           string bankAccountID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(bankAccountId))
-                throw new ArgumentNullException(nameof(bankAccountId));
+            if (string.IsNullOrEmpty(bankAccountID))
+                throw new ArgumentNullException(nameof(bankAccountID));
 
             string scope = Utility.Format(BankAccountScope.Write.Value(),
-              accountId);
+              accountID);
 
-            string endpoint = Utility.Format(BankAccountEndpoint.InitiateMicroDepositeVerification.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.InitiateMicroDepositeVerification.Value(),
+                accountID, bankAccountID);
 
-            bool success = await moovClient.PostAsync<bool>(endpoint,
+            await moovClient.PostAsync<string>(endpoint,
                 new List<string>() { scope });
-
-            return success;
         }
 
-        public async Task<bool> CompleteMicroDepositVerificationAsync(string accountId,
-           string bankAccountId)
+        public async Task<string> CompleteMicroDepositVerificationAsync(string accountID,
+           string bankAccountID, IList<int> amounts)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(bankAccountId))
-                throw new ArgumentNullException(nameof(bankAccountId));
+            if (string.IsNullOrEmpty(bankAccountID))
+                throw new ArgumentNullException(nameof(bankAccountID));
+
+            if (amounts == null || amounts.Count != 2)
+                throw new ArgumentNullException(nameof(amounts));
 
             string scope = Utility.Format(BankAccountScope.Write.Value(),
-              accountId);
+              accountID);
 
-            string endpoint = Utility.Format(BankAccountEndpoint.CompleteMicroDepositeVerification.Value(), accountId, bankAccountId);
+            string endpoint = Utility.Format(BankAccountEndpoint.CompleteMicroDepositeVerification.Value(),
+                accountID, bankAccountID);
 
-            bool success = await moovClient.PutAsync<bool>(endpoint,
-                new List<string>() { scope });
+            string status = await moovClient.PutAsync<string>(endpoint,
+                new List<string>() { scope }, amounts);
 
-            return success;
+            return status;
         }
         #endregion Public Methods
     }

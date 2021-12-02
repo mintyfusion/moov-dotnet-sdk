@@ -5,32 +5,17 @@
     #endregion namespace
 
     #region Class
-    public class BankAccountModel
+    public class BankAccountModel : BankAccountBaseModel
     {
         #region Propeties
         [JsonPropertyName("bankAccountID")]
-        public string Id { get; set; }
-
-        [JsonPropertyName("bankAccountType")]
-        public string BankAccountType { get; set; }
-
-        [JsonPropertyName("accountNumber")]
-        public string AccountNumber { get; set; }
-
-        [JsonPropertyName("routingNumber")]
-        public string RoutingNumber { get; set; }
+        public string BankAccountID { get; set; }
 
         [JsonPropertyName("fingerprint")]
         public string Fingerprint { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; }
-
-        [JsonPropertyName("holderName")]
-        public string HolderName { get; set; }
-
-        [JsonPropertyName("holderType")]
-        public string HolderType { get; set; }
 
         [JsonPropertyName("bankName")]
         public string BankName { get; set; }

@@ -231,7 +231,7 @@
         Get,
 
         [StrProp("/accounts/{0}/representatives/{1}")]
-        Disable,
+        Delete,
 
         [StrProp("/accounts/{0}/representatives/{1}")]
         Update

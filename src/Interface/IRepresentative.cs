@@ -18,7 +18,7 @@
         Task<RepresentativeModel> GetAsync(string accountId,
             string representativeID);
 
-        Task<bool> DisableAsync(string accountId,
+        Task<bool> DeleteAsync(string accountId,
             string representativeID);
 
         Task<RepresentativeModel> UpdateAsync(string accountId,

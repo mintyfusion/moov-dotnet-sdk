@@ -54,7 +54,8 @@
                 moovClient.PlatformID);
 
             IList<AccountModel> response = await moovClient.GetAsync<IList<AccountModel>>(AccountEndpoint.List.Value(),
-                new List<string> { scope }, accountQuery, new Dictionary<string, string>() { { Constant.X_ACCOUNT_ID, moovClient.PlatformID } });
+                new List<string> { scope }, accountQuery,
+                new Dictionary<string, string>() { { Constant.X_ACCOUNT_ID, moovClient.PlatformID } });
 
             return response;
         }
