@@ -9,7 +9,7 @@
     public class WalletModel
     {
         [JsonPropertyName("walletID")]
-        public string Id { get; set; }
+        public string WalletID { get; set; }
 
         [JsonPropertyName("availableBalance")]
         public AmountModel AvailableBalance { get; set; }

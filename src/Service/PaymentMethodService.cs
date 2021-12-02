@@ -1,14 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.PaymentMethod;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class PaymentMethodService : IPaymentMethod
@@ -28,19 +27,20 @@
         /// <summary>
         /// Get payment methods supported by an account
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountID"></param>
         /// <param name="paymentMethodQuery">Optional parameter containing sourceId</param>
         /// <returns>List of supported PaymentMethodModel</returns>
-        public async Task<IList<PaymentMethodModel>> ListAsync(string accountId,
+        public async Task<IList<PaymentMethodModel>> ListAsync(string accountID,
             PaymentMethodQueryModel paymentMethodQuery = null)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
             string scope = Utility.Format(PaymentMethodScope.Read.Value(),
-                accountId);
+                accountID);
 
-            string endpoint = Utility.Format(PaymentMethodEndpoint.List.Value(), accountId);
+            string endpoint = Utility.Format(PaymentMethodEndpoint.List.Value(),
+                accountID);
 
             IList<PaymentMethodModel> paymentMethods = await moovClient.GetAsync<IList<PaymentMethodModel>>(endpoint,
                 new List<string>() { scope }, paymentMethodQuery);
@@ -51,24 +51,23 @@
         /// <summary>
         /// Get paymentmethod by id for an account
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountID"></param>
         /// <param name="paymentMethodID"></param>
         /// <returns>PaymentMethodModel</returns>
-        public async Task<PaymentMethodModel> GetAsync(string accountId,
+        public async Task<PaymentMethodModel> GetAsync(string accountID,
             string paymentMethodID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
             if (string.IsNullOrEmpty(paymentMethodID))
                 throw new ArgumentNullException(nameof(paymentMethodID));
 
             string scope = Utility.Format(PaymentMethodScope.Read.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(PaymentMethodEndpoint.Get.Value(),
-                accountId,
-                paymentMethodID);
+                accountID, paymentMethodID);
 
             PaymentMethodModel paymentMethod = await moovClient.GetAsync<PaymentMethodModel>(endpoint,
                 new List<string>() { scope });

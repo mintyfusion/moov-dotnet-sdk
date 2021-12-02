@@ -1,14 +1,16 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.PaymentMethod
 {
-    #region Namespace
+    #region namespace
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class PaymentMethodQueryModel
     {
+        #region Properties
         [JsonPropertyName("sourceID")]
         public string SourceID { get; set; }
+        #endregion Properties
     }
     #endregion Class
 }

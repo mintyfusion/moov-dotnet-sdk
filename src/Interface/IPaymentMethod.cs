@@ -10,10 +10,10 @@
     public interface IPaymentMethod
     {
         #region Methods
-        Task<IList<PaymentMethodModel>> ListAsync(string accountId,
+        Task<IList<PaymentMethodModel>> ListAsync(string accountID,
             PaymentMethodQueryModel paymentMethodQuery = null);
 
-        Task<PaymentMethodModel> GetAsync(string accountId,
+        Task<PaymentMethodModel> GetAsync(string accountID,
             string paymentMethodID);
         #endregion Methods
     }
