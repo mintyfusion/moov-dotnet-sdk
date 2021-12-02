@@ -37,6 +37,9 @@
 
         [StrProp("/accounts/{0}/profile.write")]
         Update,
+
+        [StrProp("/accounts/{0}/profile.write")]
+        Patch,
     }
 
     public enum BankAccountScope

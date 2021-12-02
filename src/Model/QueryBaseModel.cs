@@ -1,17 +1,19 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model
 {
-    #region Namespace
+    #region namespace
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class QueryBaseModel
     {
+        #region Properties
         [JsonPropertyName("skip")]
         public int Skip { get; set; }
 
         [JsonPropertyName("count")]
         public int Count { get; set; }
+        #endregion Properties
     }
     #endregion Class
 }
