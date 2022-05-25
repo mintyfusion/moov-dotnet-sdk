@@ -30,7 +30,8 @@
         /// <param name="platformAccountID"></param>
         /// <param name="transfer"></param>
         /// <returns>Transfer unique id</returns>
-        public async Task<TransferResultModel> InitiateAsync(TransferModel transfer)
+        public async Task<TransferResultModel> InitiateAsync(TransferModel transfer,
+            bool synchronous)
         {
             if (transfer == null)
                 throw new ArgumentNullException(nameof(transfer));
@@ -38,8 +39,13 @@
             string scope = Utility.Format(TransferScope.Write.Value(),
                 moovClient.PlatformID);
 
+            IDictionary<string, string> headers = new Dictionary<string, string>
+            {
+                { RequestHeader.WaitFor.Value(), WaitFor.RailResponse.Value() }
+            };
+
             TransferResultModel transferResult = await moovClient.PostAsync<TransferResultModel>(TransferEndpoint.Create.Value(),
-                new List<string>() { scope }, transfer);
+                new List<string>() { scope }, transfer, synchronous ? headers : null);
 
             return transferResult;
         }

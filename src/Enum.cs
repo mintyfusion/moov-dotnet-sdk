@@ -284,5 +284,20 @@
         [StrProp("receive-1099-k")]
         Receive1099K
     }
+
+    public enum RequestHeader
+    {
+        [StrProp("X-Idempotency-Key")]
+        IdempotencyKey,
+
+        [StrProp("X-Wait-For")]
+        WaitFor
+    }
+
+    public enum WaitFor
+    {
+        [StrProp("rail-response")]
+        RailResponse
+    }
     #endregion Enum
 }

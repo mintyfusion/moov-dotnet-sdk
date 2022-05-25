@@ -10,7 +10,8 @@
     public interface ITransfer
     {
         #region Methods
-        Task<TransferResultModel> InitiateAsync(TransferModel transfer);
+        Task<TransferResultModel> InitiateAsync(TransferModel transfer,
+            bool synchronous);
 
         Task<IList<TransferModel>> ListAsync(TransferQueryModel transferQuery = null);
 
