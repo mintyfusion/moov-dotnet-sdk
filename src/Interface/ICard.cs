@@ -10,16 +10,17 @@
     public interface ICard
     {
         #region Methods
-        Task<CardModel> CreateAsync(string accountId,
-            CardModel card);
+        Task<IList<CardModel>> ListAsync(string accountID);
 
-        Task<IList<CardModel>> ListAsync(string accountId);
+        Task<CardModel> GetAsync(string accountID,
+            string cardID);
 
-        Task<CardModel> GetAsync(string accountId,
-            string cardId);
+        Task<bool> DisableAsync(string accountID,
+            string cardID);
 
-        Task<bool> DisableAsync(string accountId,
-            string cardId);
+        Task<CardModel> CreateAsync(string accountID,
+            CardModel card,
+            bool synchronous);
         #endregion Methods
     }
     #endregion Interface

@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Card;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class CardService : ICard
@@ -25,47 +25,20 @@
 
         #region Public Methods
         /// <summary>
-        /// Add card to an account
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="card"></param>
-        /// <returns>CardModel</returns>
-        public async Task<CardModel> CreateAsync(string accountId,
-            CardModel card)
-        {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
-
-            if (card == null)
-                throw new ArgumentNullException(nameof(card));
-
-            string scope = Utility.Format(CardScope.Write.Value(),
-                accountId);
-
-            string endpoint = Utility.Format(CardEndpoint.Create.Value(),
-                accountId);
-
-            CardModel cardResult = await moovClient.PostAsync<CardModel>(endpoint,
-                new List<string>() { scope }, card);
-
-            return cardResult;
-        }
-
-        /// <summary>
         /// Get all cards for an account
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountID"></param>
         /// <returns>List of CardModel</returns>
-        public async Task<IList<CardModel>> ListAsync(string accountId)
+        public async Task<IList<CardModel>> ListAsync(string accountID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
             string scope = Utility.Format(CardScope.Read.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(CardEndpoint.List.Value(),
-                accountId);
+                accountID);
 
             IList<CardModel> cards = await moovClient.GetAsync<IList<CardModel>>(endpoint,
                 new List<string>() { scope });
@@ -76,24 +49,24 @@
         /// <summary>
         /// Get card by id for an account
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="cardId"></param>
+        /// <param name="accountID"></param>
+        /// <param name="cardID"></param>
         /// <returns>CardModel</returns>
-        public async Task<CardModel> GetAsync(string accountId,
-            string cardId)
+        public async Task<CardModel> GetAsync(string accountID,
+            string cardID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(cardId))
-                throw new ArgumentNullException(nameof(cardId));
+            if (string.IsNullOrEmpty(cardID))
+                throw new ArgumentNullException(nameof(cardID));
 
             string scope = Utility.Format(CardScope.Read.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(CardEndpoint.Get.Value(),
-                accountId,
-                cardId);
+                accountID,
+                cardID);
 
             CardModel card = await moovClient.GetAsync<CardModel>(endpoint,
                 new List<string>() { scope });
@@ -104,29 +77,62 @@
         /// <summary>
         /// Disable card by id for an account
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="cardId"></param>
+        /// <param name="accountID"></param>
+        /// <param name="cardID"></param>
         /// <returns>true/false</returns>
-        public async Task<bool> DisableAsync(string accountId,
-            string cardId)
+        public async Task<bool> DisableAsync(string accountID,
+            string cardID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(cardId))
-                throw new ArgumentNullException(nameof(cardId));
+            if (string.IsNullOrEmpty(cardID))
+                throw new ArgumentNullException(nameof(cardID));
 
             string scope = Utility.Format(CardScope.Write.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(CardEndpoint.Disable.Value(),
-                accountId,
-                cardId);
+                accountID,
+                cardID);
 
             bool success = await moovClient.DeleteAsync<bool>(endpoint,
                 new List<string>() { scope });
 
             return success;
+        }
+
+        /// <summary>
+        /// Add card to an account
+        /// </summary>
+        /// <param name="accountID"></param>
+        /// <param name="card"></param>
+        /// <returns>CardModel</returns>
+        public async Task<CardModel> CreateAsync(string accountID,
+            CardModel card,
+            bool synchronous)
+        {
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
+
+            if (card == null)
+                throw new ArgumentNullException(nameof(card));
+
+            string scope = Utility.Format(CardScope.Write.Value(),
+                accountID);
+
+            string endpoint = Utility.Format(CardEndpoint.Create.Value(),
+                accountID);
+
+            IDictionary<string, string> headers = new Dictionary<string, string>
+            {
+                { RequestHeader.WaitFor.Value(), WaitFor.PaymentMethod.Value() }
+            };
+
+            CardModel cardResult = await moovClient.PostAsync<CardModel>(endpoint,
+                new List<string>() { scope }, card, synchronous ? headers : null);
+
+            return cardResult;
         }
         #endregion Public Methods
     }

@@ -9,7 +9,7 @@
     public class CardModel
     {
         [JsonPropertyName("cardID")]
-        public string Id { get; set; }
+        public string CardID { get; set; }
 
         [JsonPropertyName("fingerprint")]
         public string Fingerprint { get; set; }

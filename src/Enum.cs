@@ -39,11 +39,12 @@
         Write
     }
 
-    //TODO: Not yet done in api documentation
     public enum CardScope
     {
+        [StrProp("/accounts/{0}/cards.read")]
         Read,
 
+        [StrProp("accounts/{0}/cards.write")]
         Write
     }
 
@@ -193,8 +194,7 @@
 
     public enum CardEndpoint
     {
-        //TODO: Endpoint is different then others, review this api
-        [StrProp("https://cards.moov-staging.io/accounts/{0}/cards")]
+        [StrProp("https://cards.moov.io/api/accounts/{0}/cards")]
         Create,
 
         [StrProp("/accounts/{0}/cards")]
@@ -292,6 +292,21 @@
 
         [StrProp("receive-1099-k")]
         Receive1099K
+    }
+
+    public enum RequestHeader
+    {
+        [StrProp("X-Idempotency-Key")]
+        IdempotencyKey,
+
+        [StrProp("X-Wait-For")]
+        WaitFor
+    }
+
+    public enum WaitFor
+    {
+        [StrProp("payment-method")]
+        PaymentMethod
     }
     #endregion Enum
 }
