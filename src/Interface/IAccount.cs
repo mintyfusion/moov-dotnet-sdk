@@ -12,16 +12,17 @@
         #region Methods
         Task<AccountModel> CreateAsync(CreateUpdateAccountRequestModel createAccount);
 
-        Task<IList<AccountModel>> ListAsync(string accountId,
-            AccountQueryModel accountQuery = null);
+        Task<IList<AccountModel>> ListAsync(AccountQueryModel accountQuery = null);
 
         Task<AccountModel> GetAsync(string accountId);
 
+        Task<string> GetTOSTokenAsync();
+
         Task<AccountModel> UpdateAsync(string accountId,
-            CreateUpdateAccountRequestModel updateAccount);
+            AccountRequestModel updateAccount);
 
         Task<AccountModel> PatchAsync(string accountId,
-            AccountRequestModel account);
+            AccountRequestModel patchAccount);
         #endregion Methods
     }
     #endregion Interface

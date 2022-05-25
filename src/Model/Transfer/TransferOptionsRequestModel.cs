@@ -1,12 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Transfer
 {
-    #region Namespace
+    #region namespace
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class TransferOptionsRequestModel
     {
+        #region Properties
         [JsonPropertyName("source")]
         public TransferOptionsAccountModel Source { get; set; }
 
@@ -15,15 +16,7 @@
 
         [JsonPropertyName("amount")]
         public AmountModel Amount { get; set; }
-    }
-
-    public class TransferOptionsAccountModel
-    {
-        [JsonPropertyName("accountID")]
-        public string AccountId { get; set; }
-
-        [JsonPropertyName("paymentMethodID")]
-        public string PaymentMethodID { get; set; }
+        #endregion Properties
     }
     #endregion Class
 }

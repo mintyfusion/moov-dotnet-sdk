@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Institution;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class InstitutionService : IInstitution
@@ -31,17 +31,13 @@
         /// <param name="institutionSearch"></param>
         /// <returns>InstitutionSearchResultModel</returns>
         public async Task<InstitutionSearchResultModel> SearchAsync(Rail rail,
-             InstitutionSearchRequestModel institutionSearch)
+             InstitutionSearchQueryModel institutionSearch)
         {
             if (institutionSearch == null)
                 throw new ArgumentNullException(nameof(institutionSearch));
 
-            string scope = Utility.Format(InstitutionScope.Read.Value());
-
-            string endpoint = Utility.Format(InstitutionEndpoint.Search.Value());
-
-            InstitutionSearchResultModel institutionSearchResult = await moovClient.GetAsync<InstitutionSearchResultModel>(endpoint,
-                new List<string>() { scope }, institutionSearch);
+            InstitutionSearchResultModel institutionSearchResult = await moovClient.GetAsync<InstitutionSearchResultModel>(InstitutionEndpoint.Search.Value(),
+                new List<string>() { InstitutionScope.Read.Value() }, institutionSearch);
 
             return institutionSearchResult;
         }

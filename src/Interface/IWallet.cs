@@ -10,10 +10,10 @@
     public interface IWallet
     {
         #region Methods
-        Task<IList<WalletModel>> ListAsync(string accountId);
+        Task<IList<WalletModel>> ListAsync(string accountID);
 
-        Task<WalletModel> GetAsync(string accountId,
-           string walletId);
+        Task<WalletModel> GetAsync(string accountID,
+           string walletID);
         #endregion Methods
     }
     #endregion Interface

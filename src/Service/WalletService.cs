@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Wallet;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class WalletService : IWallet
@@ -27,18 +27,18 @@
         /// <summary>
         /// Get list of wallets for an account
         /// </summary>
-        /// <param name="accountId"></param>
+        /// <param name="accountID"></param>
         /// <returns>List of WalletModel</returns>
-        public async Task<IList<WalletModel>> ListAsync(string accountId)
+        public async Task<IList<WalletModel>> ListAsync(string accountID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
             string scope = Utility.Format(WalletScope.Read.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(WalletEndpoint.List.Value(),
-                accountId);
+                accountID);
 
             IList<WalletModel> wallets = await moovClient.GetAsync<IList<WalletModel>>(endpoint,
                 new List<string>() { scope });
@@ -49,24 +49,23 @@
         /// <summary>
         /// Get wallet by id for an account
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="walletId"></param>
+        /// <param name="accountID"></param>
+        /// <param name="walletID"></param>
         /// <returns>WalletModel</returns>
-        public async Task<WalletModel> GetAsync(string accountId,
-           string walletId)
+        public async Task<WalletModel> GetAsync(string accountID,
+           string walletID)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentNullException(nameof(accountId));
+            if (string.IsNullOrEmpty(accountID))
+                throw new ArgumentNullException(nameof(accountID));
 
-            if (string.IsNullOrEmpty(walletId))
-                throw new ArgumentNullException(nameof(walletId));
+            if (string.IsNullOrEmpty(walletID))
+                throw new ArgumentNullException(nameof(walletID));
 
             string scope = Utility.Format(WalletScope.Read.Value(),
-                accountId);
+                accountID);
 
             string endpoint = Utility.Format(WalletEndpoint.Get.Value(),
-                accountId,
-                walletId);
+                accountID, walletID);
 
             WalletModel wallet = await moovClient.GetAsync<WalletModel>(endpoint,
                 new List<string>() { scope });

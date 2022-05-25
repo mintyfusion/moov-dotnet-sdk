@@ -10,26 +10,26 @@
     public interface IBankAccount
     {
         #region Methods
-        Task<IList<BankAccountModel>> ListAsync(string accountId);
+        Task<IList<BankAccountModel>> ListAsync(string accountID);
 
-        Task<BankAccountModel> GetAsync(string accountId,
-            string bankAccountId);
+        Task<BankAccountModel> GetAsync(string accountID,
+            string bankAccountID);
 
-        Task<bool> DisableAsync(string accountId,
-            string bankAccountId);
+        Task<bool> DisableAsync(string accountID,
+            string bankAccountID);
 
-        Task<BankAccountModel> CreateAsync(string accountId,
-            BankAccountModel bankAccount);
+        Task<BankAccountModel> CreateAsync(string accountID,
+            CreateBankAccountModel createBankAccount);
 
-        Task<BankAccountModel> CreateAsync(string accountId,
+        Task<BankAccountModel> CreateAsync(string accountID,
             string token,
             bool usePlaidLink = false);
 
-        Task<bool> InitiateMicroDepositVerificationAsync(string accountId,
-           string bankAccountId);
+        Task InitiateMicroDepositVerificationAsync(string accountID,
+           string bankAccountID);
 
-        Task<bool> CompleteMicroDepositVerificationAsync(string accountId,
-           string bankAccountId);
+        Task<string> CompleteMicroDepositVerificationAsync(string accountID,
+           string bankAccountID, IList<int> amounts);
         #endregion Methods
     }
     #endregion Interface

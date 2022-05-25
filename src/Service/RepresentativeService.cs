@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Representative;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class RepresentativeService : IRepresentative
@@ -106,7 +106,7 @@
         /// <param name="accountId"></param>
         /// <param name="representativeID"></param>
         /// <returns>true/false</returns>
-        public async Task<bool> DisableAsync(string accountId,
+        public async Task<bool> DeleteAsync(string accountId,
             string representativeID)
         {
             if (string.IsNullOrEmpty(accountId))
@@ -118,7 +118,7 @@
             string scope = Utility.Format(RepresentativeScope.Write.Value(),
                 accountId);
 
-            string endpoint = Utility.Format(RepresentativeEndpoint.Disable.Value(),
+            string endpoint = Utility.Format(RepresentativeEndpoint.Delete.Value(),
                 accountId,
                 representativeID);
 

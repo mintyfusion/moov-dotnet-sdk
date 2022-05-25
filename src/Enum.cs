@@ -18,16 +18,28 @@
         RefreshToken
     }
 
+    public enum AccountType 
+    {
+        [StrProp("individual")]
+        Individual,
+
+        [StrProp("business")]
+        Business
+    }
+
     public enum AccountScope
     {
         [StrProp("/accounts/{0}/profile.read")]
         Read,
 
-        [StrProp("accounts.write")]
+        [StrProp("/accounts.write")]
         Write,
 
         [StrProp("/accounts/{0}/profile.write")]
         Update,
+
+        [StrProp("/accounts/{0}/profile.write")]
+        Patch,
     }
 
     public enum BankAccountScope
@@ -138,7 +150,10 @@
         Update,
 
         [StrProp("/accounts/{0}")]
-        Patch
+        Patch,
+
+        [StrProp("/tos-token")]
+        TOS
     }
 
     public enum TermsOfServiceEndpoint
@@ -219,7 +234,7 @@
         Get,
 
         [StrProp("/accounts/{0}/representatives/{1}")]
-        Disable,
+        Delete,
 
         [StrProp("/accounts/{0}/representatives/{1}")]
         Update

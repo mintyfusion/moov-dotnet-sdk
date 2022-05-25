@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Service
 {
-    #region Namespace
+    #region namespace
     using Interface;
     using Model.Account;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
-    #endregion Namespace
+    #endregion namespace
 
     #region Class
     public class AccountService : IAccount
@@ -34,11 +34,11 @@
             if (createAccount == null)
                 throw new ArgumentNullException(nameof(createAccount));
 
+            createAccount.Mode = "sandbox";
+
             string scope = Utility.Format(AccountScope.Write.Value());
 
-            string endpoint = Utility.Format(AccountEndpoint.Create.Value());
-
-            AccountModel response = await moovClient.PostAsync<AccountModel>(endpoint,
+            AccountModel response = await moovClient.PostAsync<AccountModel>(AccountEndpoint.Create.Value(),
                 new List<string> { scope }, createAccount);
 
             return response;
@@ -50,18 +50,14 @@
         /// <param name="accountId">Moov account id</param>
         /// <param name="accountQuery"></param>
         /// <returns>List of account</returns>
-        public async Task<IList<AccountModel>> ListAsync(string accountId,
-            AccountQueryModel accountQuery = null)
+        public async Task<IList<AccountModel>> ListAsync(AccountQueryModel accountQuery = null)
         {
-            if (string.IsNullOrEmpty(accountId))
-                throw new ArgumentException(null, nameof(accountId));
+            string scope = Utility.Format(AccountScope.Read.Value(), 
+                moovClient.PlatformID);
 
-            string scope = Utility.Format(AccountScope.Read.Value());
-
-            string endpoint = Utility.Format(AccountEndpoint.List.Value());
-
-            IList<AccountModel> response = await moovClient.GetAsync<IList<AccountModel>>(endpoint,
-                new List<string> { scope }, accountQuery);
+            IList<AccountModel> response = await moovClient.GetAsync<IList<AccountModel>>(AccountEndpoint.List.Value(),
+                new List<string> { scope }, accountQuery,
+                new Dictionary<string, string>() { { Constant.X_ACCOUNT_ID, moovClient.PlatformID } });
 
             return response;
         }
@@ -76,14 +72,24 @@
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            string scope = Utility.Format(AccountScope.Read.Value(), accountId);
+            string scope = Utility.Format(AccountScope.Read.Value(),
+                accountId);
 
-            string endpoint = Utility.Format(AccountEndpoint.Get.Value(), accountId);
+            string endpoint = Utility.Format(AccountEndpoint.Get.Value(),
+                accountId);
 
             AccountModel account = await moovClient.GetAsync<AccountModel>(endpoint,
                 new List<string> { scope });
 
             return account;
+        }
+
+        public async Task<string> GetTOSTokenAsync()
+        {
+            TermsOfServiceModel termsOfService = await moovClient.GetAsync<TermsOfServiceModel>
+                (AccountEndpoint.TOS.Value(), null);
+
+            return termsOfService.Token;
         }
 
         /// <summary>
@@ -93,7 +99,7 @@
         /// <param name="updateAccount"></param>
         /// <returns>UpdatedAccount</returns>
         public async Task<AccountModel> UpdateAsync(string accountId,
-            CreateUpdateAccountRequestModel updateAccount)
+            AccountRequestModel updateAccount)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
@@ -101,9 +107,11 @@
             if (updateAccount == null)
                 throw new ArgumentNullException(nameof(updateAccount));
 
-            string scope = Utility.Format(AccountScope.Update.Value(), accountId);
+            string scope = Utility.Format(AccountScope.Update.Value(),
+                accountId);
 
-            string endpoint = Utility.Format(AccountEndpoint.Update.Value(), accountId);
+            string endpoint = Utility.Format(AccountEndpoint.Update.Value(),
+                accountId);
 
             AccountModel account = await moovClient.PutAsync<AccountModel>(endpoint,
                 new List<string> { scope }, updateAccount);
@@ -115,23 +123,25 @@
         /// Patch account with details
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="account"></param>
+        /// <param name="patchAccount"></param>
         /// <returns>AccountModel</returns>
         public async Task<AccountModel> PatchAsync(string accountId,
-            AccountRequestModel account)
+            AccountRequestModel patchAccount)
         {
             if (string.IsNullOrEmpty(accountId))
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (account == null)
-                throw new ArgumentNullException(nameof(account));
+            if (patchAccount == null)
+                throw new ArgumentNullException(nameof(patchAccount));
 
-            string scope = Utility.Format(AccountScope.Write.Value(), accountId);
+            string scope = Utility.Format(AccountScope.Patch.Value(),
+                accountId);
 
-            string endpoint = Utility.Format(AccountEndpoint.Patch.Value(), accountId);
+            string endpoint = Utility.Format(AccountEndpoint.Patch.Value(),
+                accountId);
 
             AccountModel patchedAccount = await moovClient.Patch<AccountModel>(endpoint,
-                new List<string> { scope }, account);
+                new List<string> { scope }, patchAccount);
 
             return patchedAccount;
         }

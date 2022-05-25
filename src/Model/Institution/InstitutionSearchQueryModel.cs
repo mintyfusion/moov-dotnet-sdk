@@ -5,7 +5,7 @@
     #endregion
 
     #region Class
-    public class InstitutionSearchRequestModel : QueryBaseModel
+    public class InstitutionSearchQueryModel : QueryBaseModel
     {
         [JsonPropertyName("source")]
         public string Name { get; set; }

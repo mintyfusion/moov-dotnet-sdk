@@ -15,7 +15,7 @@
 
         Task<IList<CapabilityModel>> ListAsync(string accountId);
 
-        Task<CapabilityModel> GetRequestedAsync(string accountId,
+        Task<CapabilityModel> GetAsync(string accountId,
            Capability capability);
 
         Task<bool> DisableAsync(string accountId,

@@ -1,13 +1,13 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Account
 {
-    #region Namespace
-    using System;
+    #region namespace
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class AccountQueryModel : QueryBaseModel
     {
+        #region Properties
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
@@ -19,6 +19,7 @@
 
         [JsonPropertyName("foreignID")]
         public string ForeignID { get; set; }
+        #endregion Properties
     }
     #endregion Class
 }

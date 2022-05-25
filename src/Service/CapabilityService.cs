@@ -5,6 +5,7 @@
     using Model.Capability;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -28,7 +29,7 @@
         /// Request multiple capability for an account
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="capabilities"> Use Capability enum to create list of capabilities </param>
+        /// <param name="capabilities"> Use Capability enum to create list of capabilities</param>
         /// <returns>List of requested capabilites</returns>
         public async Task<IList<CapabilityModel>> RequestAsync(string accountId,
             IList<string> capabilities)
@@ -46,7 +47,10 @@
                 accountId);
 
             IList<CapabilityModel> requestedCapabilities = await moovClient.PostAsync<IList<CapabilityModel>>(endpoint,
-                new List<string>() { scope }, capabilities);
+                new List<string>() { scope }, new Dictionary<string, string[]>()
+                {
+                    { "capabilities", capabilities.ToArray() },
+                });
 
             return requestedCapabilities;
         }
@@ -74,12 +78,12 @@
         }
 
         /// <summary>
-        /// Get previously requested and not approved capabilities for an account
+        /// Get capability for account
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="capability"></param>
         /// <returns>List of CapabilityModel</returns>
-        public async Task<CapabilityModel> GetRequestedAsync(string accountId,
+        public async Task<CapabilityModel> GetAsync(string accountId,
            Capability capability)
         {
             if (string.IsNullOrEmpty(accountId))
@@ -114,8 +118,7 @@
                 accountId);
 
             string endpoint = Utility.Format(CapabilityEndpoint.Disable.Value(),
-                accountId,
-                capability.Value());
+                accountId, capability.Value());
 
             bool success = await moovClient.DeleteAsync<bool>(endpoint,
                 new List<string>() { scope });
