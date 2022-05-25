@@ -39,6 +39,15 @@
         Write
     }
 
+    public enum CardScope
+    {
+        [StrProp("/accounts/{0}/cards.read")]
+        Read,
+
+        [StrProp("accounts/{0}/cards.write")]
+        Write
+    }
+
     public enum CapabilitiesScope
     {
         [StrProp("/accounts/{0}/capabilities.read")]
@@ -183,6 +192,21 @@
         CompleteMicroDepositeVerification
     }
 
+    public enum CardEndpoint
+    {
+        [StrProp("https://cards.moov.io/api/accounts/{0}/cards")]
+        Create,
+
+        [StrProp("/accounts/{0}/cards")]
+        List,
+
+        [StrProp("/accounts/{0}/cards/{1}")]
+        Get,
+
+        [StrProp("/accounts/{0}/cards/{1}")]
+        Disable,
+    }
+
     public enum PaymentMethodEndpoint
     {
         [StrProp("/accounts/{0}/payment-methods")]
@@ -268,6 +292,21 @@
 
         [StrProp("receive-1099-k")]
         Receive1099K
+    }
+
+    public enum RequestHeader
+    {
+        [StrProp("X-Idempotency-Key")]
+        IdempotencyKey,
+
+        [StrProp("X-Wait-For")]
+        WaitFor
+    }
+
+    public enum WaitFor
+    {
+        [StrProp("payment-method")]
+        PaymentMethod
     }
     #endregion Enum
 }

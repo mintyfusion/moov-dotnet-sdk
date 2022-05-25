@@ -94,7 +94,7 @@
             if (headers == null)
                 headers = new Dictionary<string, string>();
 
-            headers.Add(Constant.IDEMPOTENCY_KEY, 
+            headers.Add(RequestHeader.IdempotencyKey.Value(), 
                 Guid.NewGuid().ToString());
 
             AddHeaders(headers);

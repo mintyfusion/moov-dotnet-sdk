@@ -1,15 +1,15 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Card
 {
-    #region Namespace
+    #region namespace
     using Account;
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class CardModel
     {
         [JsonPropertyName("cardID")]
-        public string Id { get; set; }
+        public string CardID { get; set; }
 
         [JsonPropertyName("fingerprint")]
         public string Fingerprint { get; set; }
