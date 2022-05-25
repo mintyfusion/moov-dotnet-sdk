@@ -5,6 +5,7 @@
     using Model.Capability;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Tutkoo.Essentials;
     #endregion Namespace
@@ -46,7 +47,10 @@
                 accountId);
 
             IList<CapabilityModel> requestedCapabilities = await moovClient.PostAsync<IList<CapabilityModel>>(endpoint,
-                new List<string>() { scope }, capabilities);
+                new List<string>() { scope }, new Dictionary<string, string[]>()
+                {
+                    { "capabilities", capabilities.ToArray() },
+                });
 
             return requestedCapabilities;
         }
@@ -114,8 +118,7 @@
                 accountId);
 
             string endpoint = Utility.Format(CapabilityEndpoint.Disable.Value(),
-                accountId,
-                capability.Value());
+                accountId, capability.Value());
 
             bool success = await moovClient.DeleteAsync<bool>(endpoint,
                 new List<string>() { scope });

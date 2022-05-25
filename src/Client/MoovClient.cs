@@ -64,7 +64,8 @@
             object queryParametersObject = null,
             IDictionary<string, string> headers = null)
         {
-            await GetTokenAsync(scopeList);
+            if (scopeList != null) //Special case to handle /tos-token
+                await GetTokenAsync(scopeList);
 
             if (queryParametersObject != null)
             {
@@ -227,10 +228,10 @@
 
         private static async Task<T> ParseResponse<T>(HttpResponseMessage response)
         {
+            string responseContent = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
             {
-                string responseContent = await response.Content.ReadAsStringAsync();
-
                 if (string.IsNullOrEmpty(responseContent))
                     return default;
 

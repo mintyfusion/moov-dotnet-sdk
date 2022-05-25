@@ -32,7 +32,7 @@
         [StrProp("/accounts/{0}/profile.read")]
         Read,
 
-        [StrProp("accounts.write")]
+        [StrProp("/accounts.write")]
         Write,
 
         [StrProp("/accounts/{0}/profile.write")]
@@ -150,7 +150,10 @@
         Update,
 
         [StrProp("/accounts/{0}")]
-        Patch
+        Patch,
+
+        [StrProp("/tos-token")]
+        TOS
     }
 
     public enum TermsOfServiceEndpoint

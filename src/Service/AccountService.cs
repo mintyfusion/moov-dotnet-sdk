@@ -34,6 +34,8 @@
             if (createAccount == null)
                 throw new ArgumentNullException(nameof(createAccount));
 
+            createAccount.Mode = "sandbox";
+
             string scope = Utility.Format(AccountScope.Write.Value());
 
             AccountModel response = await moovClient.PostAsync<AccountModel>(AccountEndpoint.Create.Value(),
@@ -80,6 +82,14 @@
                 new List<string> { scope });
 
             return account;
+        }
+
+        public async Task<string> GetTOSTokenAsync()
+        {
+            TermsOfServiceModel termsOfService = await moovClient.GetAsync<TermsOfServiceModel>
+                (AccountEndpoint.TOS.Value(), null);
+
+            return termsOfService.Token;
         }
 
         /// <summary>

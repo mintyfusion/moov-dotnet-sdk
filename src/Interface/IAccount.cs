@@ -16,6 +16,8 @@
 
         Task<AccountModel> GetAsync(string accountId);
 
+        Task<string> GetTOSTokenAsync();
+
         Task<AccountModel> UpdateAsync(string accountId,
             AccountRequestModel updateAccount);
 

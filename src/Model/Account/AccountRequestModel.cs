@@ -8,6 +8,9 @@
     #region Class
     public class AccountRequestModel
     {
+        [JsonPropertyName("mode")]
+        public string Mode { get; set; }
+
         /// <summary>
         /// Id from system database
         /// </summary>
