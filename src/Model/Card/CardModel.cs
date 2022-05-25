@@ -1,9 +1,9 @@
 ﻿namespace Tutkoo.mintyfusion.Moov.Sdk.Model.Card
 {
-    #region Namespace
+    #region namespace
     using Account;
     using System.Text.Json.Serialization;
-    #endregion
+    #endregion namespace
 
     #region Class
     public class CardModel
